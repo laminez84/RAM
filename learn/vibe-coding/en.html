@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive guide to the vibe coding paradigm in English.">
+    <title>Interactive Vibe Coding Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F9F9F9; color: #1f2937; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .nav-link { transition: color 0.3s ease; }
+        .nav-link:hover { color: #3b82f6; }
+        .active-nav { color: #3b82f6; font-weight: 500; }
+        .step-button.active { background-color: #3b82f6; color: white; }
+        .tool-toggle.active { background-color: #1d4ed8; color: white; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-xl font-bold text-gray-800">Vibe Coding</a>
+            <div class="hidden md:flex items-center space-x-6 text-sm">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#workflow" class="nav-link">Workflow</a>
+                <a href="#tools" class="nav-link">Key Tools</a>
+                <a href="#pros-cons" class="nav-link">Pros & Cons</a>
+                <a href="#future" class="nav-link">The Future</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
+            <a href="#overview" class="block py-2 text-sm nav-link">Overview</a>
+            <a href="#workflow" class="block py-2 text-sm nav-link">Workflow</a>
+            <a href="#tools" class="block py-2 text-sm nav-link">Key Tools</a>
+            <a href="#pros-cons" class="block py-2 text-sm nav-link">Pros & Cons</a>
+            <a href="#future" class="block py-2 text-sm nav-link">The Future</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="min-h-[60vh] flex items-center bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 leading-tight">Vibe Coding</h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A new software development paradigm for the AI era. Explore the shift from 'writing' code to 'conducting' it.</p>
+                <a href="#overview" class="mt-8 inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105">
+                    Learn More
+                </a>
+            </div>
+        </section>
+
+        <section id="overview" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">What is Vibe Coding?</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Vibe coding is an innovative way for developers to create software by collaborating with AI. It's about turning ideas into reality quickly, based on intuition and intent rather than strict logic.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h3 class="font-bold text-lg text-blue-600">Definition & Origin</h3>
+                        <p class="mt-2 text-sm text-gray-600">Coined by OpenAI co-founder Andrej Karpathy, it's a development method where the developer describes their intent in natural language, and an AI generates the code. It has spread rapidly since its emergence in February 2025.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h3 class="font-bold text-lg text-blue-600">Who Is It For?</h3>
+                        <p class="mt-2 text-sm text-gray-600">It lowers the barrier to entry, allowing non-experts to realize their ideas. For skilled developers, it maximizes productivity by automating repetitive tasks, opening up new possibilities for everyone.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h3 class="font-bold text-lg text-blue-600">Core Principles</h3>
+                        <p class="mt-2 text-sm text-gray-600">It is based on intent-driven development, collaboration with AI, rapid iteration and improvement, and an acceptance of initial imperfections. The developer acts as a conductor, not just a writer of code.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">The Vibe Coding Workflow</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">From idea to deployment, vibe coding is a dynamic cycle combining human creativity and AI execution. Click each step to see the details.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+                        <button data-step="1" class="step-button w-full md:w-auto flex-1 text-center px-4 py-2 rounded-lg bg-white shadow-md transition active">1. Describe</button>
+                        <div class="text-gray-400 font-mono hidden md:block">&gt;</div>
+                        <button data-step="2" class="step-button w-full md:w-auto flex-1 text-center px-4 py-2 rounded-lg bg-white shadow-md transition">2. Generate</button>
+                        <div class="text-gray-400 font-mono hidden md:block">&gt;</div>
+                        <button data-step="3" class="step-button w-full md:w-auto flex-1 text-center px-4 py-2 rounded-lg bg-white shadow-md transition">3. Review</button>
+                        <div class="text-gray-400 font-mono hidden md:block">&gt;</div>
+                        <button data-step="4" class="step-button w-full md:w-auto flex-1 text-center px-4 py-2 rounded-lg bg-white shadow-md transition">4. Test</button>
+                         <div class="text-gray-400 font-mono hidden md:block">&gt;</div>
+                        <button data-step="5" class="step-button w-full md:w-auto flex-1 text-center px-4 py-2 rounded-lg bg-white shadow-md transition">5. Integrate</button>
+                    </div>
+                    <div id="workflow-details" class="bg-white p-8 rounded-lg shadow-lg border border-gray-100 min-h-[150px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">Tool Comparison: Cursor vs. GitHub Copilot</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Compare two leading tools for vibe coding. Which one is a better fit for your workflow? The chart below visualizes their key features based on a scoring system.</p>
+                </div>
+
+                <div class="flex justify-center mb-8 space-x-2">
+                    <button id="cursor-toggle" class="tool-toggle px-6 py-2 rounded-lg text-sm font-semibold transition active">Cursor</button>
+                    <button id="copilot-toggle" class="tool-toggle px-6 py-2 rounded-lg text-sm font-semibold transition">GitHub Copilot</button>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="tools-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="pros-cons" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">Opportunities and Challenges</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Vibe coding holds enormous potential, but it also comes with challenges that require careful consideration. Explore both sides of this new paradigm with a balanced view.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="pros-cons-chart"></canvas>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-green-600 mb-2">Pros</h3>
+                            <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                                <li>Explosive increase in development speed and efficiency</li>
+                                <li>Lowering of coding barriers and democratization of development</li>
+                                <li>Focus on creativity and higher-level problem solving</li>
+                                <li>Rapid prototyping and market validation</li>
+                                <li>Potential for development cost reduction</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-red-600 mb-2">Cons</h3>
+                            <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                                <li>Potential for issues with code quality and performance</li>
+                                <li>Risk of introducing potential security vulnerabilities</li>
+                                <li>Difficulty in debugging and maintenance due to lack of understanding</li>
+                                <li>Concerns about accelerating the accumulation of technical debt</li>
+                                <li>Risk of developer skill degradation due to over-reliance on AI</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="py-20">
+             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">Future Outlook and the Developer's Role</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Vibe coding is more than a trend; it's changing the entire development culture. What skills will future developers need, and how will they collaborate with AI?</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h3 class="font-bold text-lg text-blue-600">The Evolving Role of the Developer</h3>
+                        <p class="mt-2 text-sm text-gray-600">The role is shifting from a simple coder to an <strong>architect and supervisor</strong>. The focus will be on high-level design, auditing and improving AI-generated code, and tackling complex problems that AI cannot solve. The importance of soft skills like communication and critical thinking will grow.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h3 class="font-bold text-lg text-blue-600">The Centaur Developer Model</h3>
+                        <p class="mt-2 text-sm text-gray-600">The <strong>'Centaur Developer'</strong>, a combination of human intelligence and AI capabilities, will become commonplace. This model maximizes productivity by leveraging AI's speed for routine tasks and human intelligence for complex problem-solving and strategy.</p>
+                    </div>
+                </div>
+                 <div class="mt-12 text-center">
+                    <h3 class="text-xl font-bold text-gray-800">Grow with the Community</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Vibe coding is a rapidly evolving field. Community involvement is essential to stay up-to-date and share knowledge with peers.</p>
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <a href="https://vibecode.kr/" target="_blank" class="bg-gray-800 text-white font-semibold px-6 py-2 rounded-lg hover:bg-gray-900 transition">vibecode.kr (Korean)</a>
+                        <a href="https://www.reddit.com/r/vibecoders/" target="_blank" class="bg-red-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-600 transition">Reddit (Global)</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; 2025 Interactive Vibe Coding Guide. All Rights Reserved.</p>
+            <p class="mt-1 text-gray-400">This page is an interactive summary generated based on the provided report.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Navigation scroll highlighting
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 68) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active-nav');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active-nav');
+                    }
+                });
+            });
+
+            // Workflow section logic
+            const workflowSteps = {
+                1: { title: '1. Describe', content: 'The developer explains the desired feature or problem to the AI in clear, concise natural language. This "prompt" is the most crucial first step that determines the quality of the output.' },
+                2: { title: '2. Generate', content: 'The AI model (LLM) analyzes the prompt and generates the corresponding code in the appropriate programming language and framework. This process can take anywhere from a few seconds to a few minutes.' },
+                3: { title: '3. Review', content: 'The developer reads the AI-generated code to check if it works as intended and if there are any potential errors or security issues. The AI is a partner, but the final responsibility lies with the developer.' },
+                4: { title: '4. Test & Iterate', content: 'Run and test the generated code to find problems. This is the core of vibe coding: a repetitive process of explaining issues or improvements back to the AI to refine the code.' },
+                5: { title: '5. Integrate', content: 'Once a satisfactory result is achieved, the code is integrated into the actual project or deployed as a standalone application. Using a version control system (e.g., Git) is important.' }
+            };
+
+            const stepButtons = document.querySelectorAll('.step-button');
+            const detailsContainer = document.getElementById('workflow-details');
+
+            function updateWorkflowDetails(step) {
+                stepButtons.forEach(btn => btn.classList.remove('active'));
+                const activeButton = document.querySelector(`.step-button[data-step="${step}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+                const data = workflowSteps[step];
+                detailsContainer.innerHTML = `
+                    <h4 class="font-bold text-lg mb-2 text-gray-800">${data.title}</h4>
+                    <p class="text-gray-600">${data.content}</p>
+                `;
+            }
+
+            stepButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    updateWorkflowDetails(button.dataset.step);
+                });
+            });
+
+            updateWorkflowDetails(1);
+
+            // Tools chart logic
+            const toolData = {
+                cursor: [4.5, 4, 4, 3, 4.5, 3],
+                copilot: [3, 3.5, 4.5, 5, 3.5, 4.5]
+            };
+
+            const toolChartLabels = ['Project Context Understanding', 'Natural Language Refactoring', 'IDE Integration & Ecosystem', 'Performance & Speed', 'Beginner Friendliness', 'Cost-Effectiveness'];
+            
+            const toolChartCtx = document.getElementById('tools-chart').getContext('2d');
+            let toolsChart = new Chart(toolChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: toolChartLabels,
+                    datasets: [{
+                        label: 'Cursor',
+                        data: toolData.cursor,
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 5,
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.2)'
+                            }
+                        },
+                        y: {
+                           grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += context.parsed.x + ' / 5';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const cursorToggle = document.getElementById('cursor-toggle');
+            const copilotToggle = document.getElementById('copilot-toggle');
+
+            function updateToolChart(tool) {
+                if (tool === 'cursor') {
+                    cursorToggle.classList.add('active');
+                    copilotToggle.classList.remove('active');
+                    toolsChart.data.datasets[0].label = 'Cursor';
+                    toolsChart.data.datasets[0].data = toolData.cursor;
+                    toolsChart.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.7)';
+                    toolsChart.data.datasets[0].borderColor = 'rgba(59, 130, 246, 1)';
+                } else {
+                    copilotToggle.classList.add('active');
+                    cursorToggle.classList.remove('active');
+                    toolsChart.data.datasets[0].label = 'GitHub Copilot';
+                    toolsChart.data.datasets[0].data = toolData.copilot;
+                    toolsChart.data.datasets[0].backgroundColor = 'rgba(34, 197, 94, 0.7)';
+                    toolsChart.data.datasets[0].borderColor = 'rgba(34, 197, 94, 1)';
+                }
+                toolsChart.update();
+            }
+
+            cursorToggle.addEventListener('click', () => updateToolChart('cursor'));
+            copilotToggle.addEventListener('click', () => updateToolChart('copilot'));
+            
+            // Pros & Cons chart
+            const prosConsCtx = document.getElementById('pros-cons-chart').getContext('2d');
+            const prosConsChart = new Chart(prosConsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pros (Opportunities)', 'Cons (Risks)'],
+                    datasets: [{
+                        data: [55, 45],
+                        backgroundColor: [
+                            'rgba(22, 163, 74, 0.8)',
+                            'rgba(220, 38, 38, 0.8)'
+                        ],
+                        borderColor: [
+                             '#FFFFFF',
+                             '#FFFFFF'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Balancing the Potential and Risks of Vibe Coding',
+                            padding: {
+                                top: 10,
+                                bottom: 10
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
