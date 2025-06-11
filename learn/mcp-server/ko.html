@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인터랙티브 리포트: Model Context Protocol (MCP)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Calm Neutral
+    Application Structure Plan: The SPA is designed with a top navigation bar and thematic, full-screen sections to create a focused, non-linear user experience. This structure allows users (likely developers or tech leaders) to directly access the information they need most, whether it's the high-level concept, the implementation details of a specific tool like Notion/Slack, or the critical security implications. The flow starts with a compelling introduction ('What is MCP?'), moves to foundational knowledge ('Core Concepts'), showcases market traction ('Ecosystem'), provides actionable instructions ('Practical Guides'), addresses risks ('Security Center'), and concludes with a look ahead ('Future'). This is more effective than a linear document scroll as it respects the user's specific interests and prior knowledge, enhancing usability and information retention for a technical audience.
+    Visualization & Content Choices: 
+    - M*N vs M+N Problem: Goal: Compare. Method: A simple, clear visual diagram using HTML/CSS Flexbox, which is more intuitive than a textual explanation.
+    - Architecture Diagram: Goal: Organize. Method: An interactive HTML/CSS component. Hovering over Host, Client, or Server reveals its description, promoting active learning.
+    - Ecosystem Growth: Goal: Change/Inform. Method: A Chart.js bar chart visualizes the rapid growth to 5,000+ servers, making the abstract number tangible and impactful. Library: Chart.js.
+    - Practical Guides (Notion/Slack): Goal: Organize/Inform. Method: A tabbed interface isolates complex setup instructions, preventing information overload. Within each tab, structured content with code blocks and lists makes the steps easy to follow.
+    - Security Vulnerabilities: Goal: Compare/Organize. Method: An interactive grid of cards. Each card represents a vulnerability. Clicking a card reveals the corresponding mitigation strategy. This interaction breaks down dense security information into manageable, engaging chunks.
+    - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #F8F7F4; color: #333; }
+        .nav-link { transition: color 0.3s, border-color 0.3s; }
+        .nav-link.active { color: #4F46E5; border-bottom-color: #4F46E5; }
+        .nav-link:not(.active):hover { color: #6366F1; border-bottom-color: #A5B4FC; }
+        .tab-button.active { background-color: #4F46E5; color: #fff; }
+        .tab-button:not(.active) { background-color: #E0E7FF; color: #4338CA; }
+        .tab-button:not(.active):hover { background-color: #C7D2FE; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .security-card { perspective: 1000px; }
+        .security-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .security-card.is-flipped .security-card-inner { transform: rotateY(180deg); }
+        .security-card-front, .security-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; border-radius: 0.75rem; }
+        .security-card-front { background-color: #fff; border: 1px solid #ddd; }
+        .security-card-back { background-color: #4338CA; color: #fff; transform: rotateY(180deg); }
+        .section-fade-in { animation: fadeIn 1s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-[#F8F7F4]">
+
+    <header class="bg-blue-800 text-white sticky top-0 z-50 shadow-md">
+        <nav class="max-w-4xl mx-auto flex items-center justify-between p-4">
+            <a href="../../index.html#home" class="text-2xl font-bold">Ram Woo</a>
+            <button id="nav-toggle" class="md:hidden focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+            <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold">
+                <li><a href="../../index.html#home" class="hover:text-blue-200">Home</a></li>
+                <li><a href="../../about.html" class="hover:text-blue-200">About</a></li>
+                <li><a href="../../experience.html" class="hover:text-blue-200">Experience</a></li>
+                <li><a href="../../learn/" class="hover:text-blue-200">Learn</a></li>
+                <li><a href="../../index.html#contact" class="hover:text-blue-200">Contact</a></li>
+            </ul>
+        </nav>
+        <ul id="nav-menu-mobile" class="md:hidden hidden flex-col space-y-2 px-4 pb-4 text-sm font-semibold bg-blue-800">
+            <li><a href="../../index.html#home" class="block py-1 hover:text-blue-200">Home</a></li>
+            <li><a href="../../about.html" class="block py-1 hover:text-blue-200">About</a></li>
+            <li><a href="../../experience.html" class="block py-1 hover:text-blue-200">Experience</a></li>
+            <li><a href="../../learn/" class="block py-1 hover:text-blue-200">Learn</a></li>
+            <li><a href="../../index.html#contact" class="block py-1 hover:text-blue-200">Contact</a></li>
+        </ul>
+    </header>
+
+    <div class="flex">
+    <aside class="hidden md:block w-48 p-4 sticky top-20 self-start">
+        <ul class="space-y-2 text-sm font-semibold">
+            <li><a href="#intro" class="nav-link">소개</a></li>
+            <li><a href="#concepts" class="nav-link">핵심 개념</a></li>
+            <li><a href="#ecosystem" class="nav-link">생태계</a></li>
+            <li><a href="#guides" class="nav-link">활용 가이드</a></li>
+            <li><a href="#security" class="nav-link">보안 센터</a></li>
+            <li><a href="#future" class="nav-link">미래 전망</a></li>
+        </ul>
+    </aside>
+
+    <main class="flex-1">
+        <section id="intro" class="page-section container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 min-h-screen flex flex-col justify-center items-center text-center section-fade-in">
+            <h2 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                Model Context Protocol (MCP)
+            </h2>
+            <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-600">
+                AI 모델과 외부 도구, 데이터, 서비스를 연결하는 개방형 표준입니다. MCP는 복잡한 통합 문제를 해결하여 AI 개발을 더 빠르고, 효율적이며, 안전하게 만듭니다.
+            </p>
+            <div class="mt-12 w-full max-w-4xl">
+                <h3 class="text-2xl font-bold text-gray-800">통합 문제, 이렇게 해결됩니다: M×N → M+N</h3>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-red-50 p-6 rounded-lg border border-red-200">
+                        <h4 class="font-bold text-lg text-red-800">Before MCP: M x N 문제</h4>
+                        <p class="text-sm text-red-700 mt-2">M개의 AI 모델과 N개의 도구를 연결하려면 M x N 개의 맞춤형 통합이 필요합니다.</p>
+                        <div class="mt-4 flex justify-around items-center h-32">
+                            <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                            </div>
+                            <div class="relative w-24 h-full flex items-center">
+                                <div class="absolute w-full h-px bg-red-400 transform rotate-12"></div>
+                                <div class="absolute w-full h-px bg-red-400 transform -rotate-12"></div>
+                                <div class="absolute w-full h-px bg-red-400 transform rotate-45"></div>
+                                <div class="absolute w-full h-px bg-red-400 transform -rotate-45"></div>
+                            </div>
+                            <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                        <h4 class="font-bold text-lg text-green-800">After MCP: M + N 해결</h4>
+                        <p class="text-sm text-green-700 mt-2">각 모델과 도구가 MCP 표준만 따르면, M+N개의 구현으로 모두 연결됩니다.</p>
+                        <div class="mt-4 flex justify-around items-center h-32">
+                             <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                            </div>
+                             <div class="relative w-24 h-full flex items-center justify-center">
+                                <div class="w-px h-full bg-green-400"></div>
+                            </div>
+                            <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="concepts" class="page-section bg-white min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">핵심 개념</h2>
+                    <p class="mt-4 text-lg leading-8 text-gray-600">MCP는 클라이언트-서버 아키텍처를 기반으로 명확한 통신 규칙을 정의합니다.</p>
+                </div>
+                <div class="mt-16">
+                    <h3 class="text-2xl font-bold text-center text-gray-800">클라이언트-서버 아키텍처</h3>
+                    <p class="mt-2 text-center text-gray-600">컴포넌트 위에 마우스를 올려보세요.</p>
+                    <div class="mt-8 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 architecture-diagram">
+                        <div data-target="host-desc" class="arch-item flex flex-col items-center p-6 bg-gray-50 rounded-lg border border-gray-200 w-full md:w-1/4 transition-all duration-300 hover:shadow-lg hover:border-indigo-400">
+                            <span class="text-4xl">🏠</span>
+                            <h4 class="mt-2 text-lg font-semibold">MCP 호스트</h4>
+                        </div>
+                        <div class="text-3xl text-gray-400 font-thin">↔</div>
+                        <div data-target="client-desc" class="arch-item flex flex-col items-center p-6 bg-gray-50 rounded-lg border border-gray-200 w-full md:w-1/4 transition-all duration-300 hover:shadow-lg hover:border-indigo-400">
+                            <span class="text-4xl">🛡️</span>
+                            <h4 class="mt-2 text-lg font-semibold">MCP 클라이언트</h4>
+                        </div>
+                        <div class="text-3xl text-gray-400 font-thin">↔</div>
+                        <div data-target="server-desc" class="arch-item flex flex-col items-center p-6 bg-gray-50 rounded-lg border border-gray-200 w-full md:w-1/4 transition-all duration-300 hover:shadow-lg hover:border-indigo-400">
+                           <span class="text-4xl">⚙️</span>
+                            <h4 class="mt-2 text-lg font-semibold">MCP 서버</h4>
+                        </div>
+                    </div>
+                    <div id="arch-description" class="mt-8 p-6 bg-indigo-50 text-indigo-900 rounded-lg min-h-[100px] flex items-center justify-center transition-opacity duration-300">
+                        <p id="host-desc" class="arch-desc hidden">Claude 데스크톱 앱과 같이 최종 사용자와 상호작용하는 AI 애플리케이션입니다. 여러 서버에 동시에 연결할 수 있습니다.</p>
+                        <p id="client-desc" class="arch-desc hidden">호스트가 각 서버 연결을 관리하는 데 사용하는 중개자입니다. 보안을 위해 샌드박스 환경에서 실행됩니다.</p>
+                        <p id="server-desc" class="arch-desc hidden">Notion, Slack 등 특정 도메인의 기능(도구, 데이터)을 MCP 표준에 맞춰 제공하는 프로그램입니다.</p>
+                        <p id="arch-default-desc">각 구성 요소의 역할을 확인해보세요.</p>
+                    </div>
+                </div>
+                 <div class="mt-20">
+                    <h3 class="text-2xl font-bold text-center text-gray-800">통신 프리미티브</h3>
+                    <p class="mt-2 text-center text-gray-600">클라이언트와 서버는 아래의 기본 메시지 유형으로 통신합니다.</p>
+                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-indigo-700">Prompts (서버 측)</h4>
+                            <p class="mt-2 text-gray-600">AI 모델을 안내하기 위해 미리 준비된 지침이나 템플릿입니다.</p>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-indigo-700">Resources (서버 측)</h4>
+                            <p class="mt-2 text-gray-600">모델의 컨텍스트를 풍부하게 하는 구조화된 데이터입니다 (예: 문서, 코드 조각).</p>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-indigo-700">Tools (서버 측)</h4>
+                            <p class="mt-2 text-gray-600">모델이 호출할 수 있는 실행 가능한 함수 또는 작업입니다 (예: 메시지 전송).</p>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-teal-700">Roots (클라이언트 측)</h4>
+                            <p class="mt-2 text-gray-600">서버가 권한 하에 접근할 수 있는 호스트의 파일 시스템이나 환경의 진입점입니다.</p>
+                        </div>
+                         <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-teal-700">Sampling (클라이언트 측)</h4>
+                            <p class="mt-2 text-gray-600">서버가 프롬프트를 기반으로 호스트 AI에 작업 완료를 요청하는 메커니즘입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosystem" class="page-section container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">빠르게 성장하는 생태계</h2>
+                <p class="mt-4 text-lg leading-8 text-gray-600">주요 AI 기업들의 참여로 MCP는 업계 표준으로 자리잡고 있습니다.</p>
+            </div>
+            <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800">주요 참여 기업</h3>
+                    <p class="mt-2 text-gray-600">Anthropic, OpenAI, Google DeepMind 등 경쟁사들까지 MCP를 채택하며 개방형 생태계를 함께 만들어가고 있습니다.</p>
+                    <div class="mt-8 flex flex-wrap gap-6 justify-center lg:justify-start">
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Anthropic</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">OpenAI</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Google DeepMind</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Microsoft</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Block</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Replit</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Sourcegraph</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800">MCP 서버 수 증가 추이</h3>
+                     <div class="chart-container mt-4">
+                        <canvas id="ecosystemChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="guides" class="page-section bg-white min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">MCP 실전 활용 가이드</h2>
+                    <p class="mt-4 text-lg leading-8 text-gray-600">Notion과 Slack에 MCP를 연동하여 AI 어시스턴트의 능력을 확장하는 방법을 알아보세요.</p>
+                </div>
+                <div class="mt-12">
+                    <div class="flex justify-center border-b border-gray-200">
+                        <button data-tab="notion" class="tab-button text-lg font-medium py-3 px-6 rounded-t-lg">Notion 연동</button>
+                        <button data-tab="slack" class="tab-button text-lg font-medium py-3 px-6 rounded-t-lg">Slack 연동</button>
+                    </div>
+                    <div class="mt-8">
+                        <div id="notion-content" class="tab-content">
+                            <h3 class="text-2xl font-bold text-gray-800">Notion: 당신의 워크스페이스를 AI와 연결하기</h3>
+                            <p class="mt-2 text-gray-600">Notion의 데이터베이스와 페이지를 AI가 읽고, 쓰고, 검색하게 만드세요.</p>
+                            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-semibold text-lg">주요 기능</h4>
+                                    <ul class="mt-4 space-y-2 list-disc list-inside text-gray-700">
+                                        <li>Notion DB 쿼리 및 검색</li>
+                                        <li>새 페이지 생성 및 기존 페이지 업데이트</li>
+                                        <li>긴 문서 요약 및 정보 추출</li>
+                                        <li>작업 관리 및 데이터 입력 자동화</li>
+                                    </ul>
+                                    <h4 class="font-semibold text-lg mt-6">설정 방법</h4>
+                                     <ol class="mt-4 space-y-2 list-decimal list-inside text-gray-700">
+                                        <li>Notion에서 '내부 통합' 생성 후 시크릿 토큰 발급</li>
+                                        <li>통합에 접근할 데이터베이스/페이지 공유</li>
+                                        <li>MCP 클라이언트(예: Claude Desktop) 설정 파일에 서버 정보 추가</li>
+                                    </ol>
+                                </div>
+                                <div class="bg-gray-800 text-white p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                                    <p class="text-gray-400 mb-2">// Claude Desktop 설정 예시 (claude-desktop-config.json)</p>
+                                    <pre><code>{
+  "mcpServers": {
+    "notionApi": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@notionhq/notion-mcp-server"
+      ],
+      "env": {
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer YOUR_TOKEN_HERE\", \"Notion-Version\": \"2022-06-28\"}"
+      }
+    }
+  }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="slack-content" class="tab-content hidden">
+                            <h3 class="text-2xl font-bold text-gray-800">Slack: 팀 커뮤니케이션에 AI 참여시키기</h3>
+                            <p class="mt-2 text-gray-600">AI가 Slack 채널을 모니터링하고, 메시지를 보내며, 팀의 Q&A를 돕게 하세요.</p>
+                             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-semibold text-lg">주요 기능</h4>
+                                    <ul class="mt-4 space-y-2 list-disc list-inside text-gray-700">
+                                        <li>채널에 메시지 전송 및 스레드 답장</li>
+                                        <li>채널 대화 기록 검색 및 요약</li>
+                                        <li>중요 업데이트 자동 알림</li>
+                                        <li>다른 도구(Jira, Notion)와 연계된 워크플로우 자동화</li>
+                                    </ul>
+                                     <h4 class="font-semibold text-lg mt-6">설정 방법</h4>
+                                     <ol class="mt-4 space-y-2 list-decimal list-inside text-gray-700">
+                                        <li>Slack API에서 새 앱 생성 및 봇 설정</li>
+                                        <li>필요한 권한(Scopes) 부여 후 OAuth 토큰 발급</li>
+                                        <li>환경변수(SLACK_BOT_TOKEN) 설정 후 MCP 서버 실행</li>
+                                        <li>MCP 클라이언트에 서버 정보 추가</li>
+                                    </ol>
+                                </div>
+                                <div class="bg-gray-800 text-white p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                                    <p class="text-gray-400 mb-2">// shouting-mcp-slack 서버 실행 예시 (터미널)</p>
+                                    <pre><code># 1. 패키지 설치
+npm install -g shouting-mcp-slack
+
+# 2. 환경 변수 설정
+export SLACK_BOT_TOKEN='xoxb-YOUR-TOKEN'
+export SLACK_TEAM_ID='T012345XYZ'
+
+# 3. 서버 실행
+mcp-server-slack</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="security" class="page-section min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">MCP 보안 센터</h2>
+                    <p class="mt-4 text-lg leading-8 text-gray-600">강력한 만큼 신중한 접근이 필요합니다. 주요 보안 위협과 대응 방안을 확인하세요.</p>
+                    <p class="mt-2 text-sm text-indigo-600 font-medium">카드를 클릭하여 대응 방안을 볼 수 있습니다.</p>
+                </div>
+                <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Security cards will be injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="page-section bg-white min-h-screen flex flex-col justify-center items-center text-center section-fade-in">
+             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">MCP를 통한 AI 애플리케이션의 미래</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                    MCP는 단순한 기술 표준을 넘어, AI가 우리 세계와 상호작용하는 방식을 근본적으로 바꾸는 열쇠입니다. 표준화, 개방성, 그리고 강력한 보안을 바탕으로, 우리는 더욱 지능적이고 유용하며 안전한 AI 시대를 맞이할 것입니다.
+                </p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+                    <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">개발 비용 절감</h4>
+                        <p class="mt-2 text-sm text-indigo-700">M+N 통합으로 중복 개발을 없애고 유지보수 부담을 줄입니다.</p>
+                    </div>
+                     <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">상호 운용성 증진</h4>
+                        <p class="mt-2 text-sm text-indigo-700">벤더 종속 없이 다양한 모델과 도구를 자유롭게 조합하여 사용합니다.</p>
+                    </div>
+                     <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">강력한 AI 경험</h4>
+                        <p class="mt-2 text-sm text-indigo-700">실시간 데이터와 외부 도구를 활용해 더 정확하고 맥락에 맞는 AI를 구현합니다.</p>
+                    </div>
+                     <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">혁신 생태계 가속</h4>
+                        <p class="mt-2 text-sm text-indigo-700">개방형 표준 위에서 누구나 새로운 AI 도구와 서비스를 만들고 공유합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('nav-toggle');
+            const mobileMenu = document.getElementById('nav-menu-mobile');
+            toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.page-section');
+
+            const securityVulnerabilities = [
+                { title: "프롬프트 주입", description: "악의적인 입력으로 LLM을 조작", mitigation: "입력 유효성 검사, 컨텍스트 격리, 모든 입력을 신뢰할 수 없는 것으로 간주" },
+                { title: "도구 감염 (공급망)", description: "악의적이거나 검증되지 않은 MCP 서버 사용", mitigation: "서버 검증, 코드 서명, 신뢰할 수 있는 레지스트리 사용" },
+                { title: "가변적 도구 정의", description: "승인된 서버가 나중에 악성 기능 추가", mitigation: "도구 정의 고정 및 서명, 런타임 변경 불가" },
+                { title: "과도한 권한 위임", description: "서버가 필요 이상의 권한을 요청/부여받음", mitigation: "최소 권한 원칙 적용, 토큰 범위 제한" },
+                { title: "격리되지 않은 실행", description: "서버 취약점으로 호스트에서 원격 코드 실행(RCE)", mitigation: "서버 실행 환경 샌드박싱, 코드 감사" },
+                { title: "모호한 도구 ID", description: "유사 이름으로 신뢰된 도구 사칭", mitigation: "강력한 서버 ID 확인, 서명 기반 검증" },
+                { title: "자격 증명 유출", description: "로그나 코드에 노출된 토큰 재사용", mitigation: "안전한 토큰 저장, 단기 토큰 사용" },
+                { title: "불충분한 인증", description: "인증되지 않은 엔드포인트로 스푸핑/MITM 공격", mitigation: "상호 TLS(mTLS) 및 강력한 인증 시행" },
+            ];
+
+            const securityContainer = document.querySelector('#security .grid');
+            securityVulnerabilities.forEach(vuln => {
+                const card = document.createElement('div');
+                card.className = 'security-card h-48 cursor-pointer';
+                card.innerHTML = `
+                    <div class="security-card-inner">
+                        <div class="security-card-front">
+                            <h4 class="text-lg font-bold text-center text-red-700">${vuln.title}</h4>
+                            <p class="mt-2 text-sm text-center text-gray-600">${vuln.description}</p>
+                        </div>
+                        <div class="security-card-back">
+                            <h5 class="text-md font-bold text-center">대응 방안</h5>
+                            <p class="mt-2 text-sm text-center">${vuln.mitigation}</p>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    card.classList.toggle('is-flipped');
+                });
+                securityContainer.appendChild(card);
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                        entry.target.classList.add('section-fade-in');
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            navLinks[0].classList.add('active');
+
+            const ecosystemChartCtx = document.getElementById('ecosystemChart').getContext('2d');
+            const ecosystemChart = new Chart(ecosystemChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024년 11월', '2025년 3월', '2025년 4월', '2025년 5월'],
+                    datasets: [{
+                        label: '누적 MCP 서버 수',
+                        data: [100, 1500, 3000, 5000], 
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + ' 개';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Glama 디렉토리 등록 서버 수'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.parsed.y.toLocaleString()} 개`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const archItems = document.querySelectorAll('.arch-item');
+            const archDescriptions = document.querySelectorAll('.arch-desc');
+            const archDefaultDesc = document.getElementById('arch-default-desc');
+
+            archItems.forEach(item => {
+                item.addEventListener('mouseover', () => {
+                    const targetId = item.dataset.target;
+                    archDefaultDesc.classList.add('hidden');
+                    archDescriptions.forEach(desc => {
+                        desc.classList.toggle('hidden', desc.id !== targetId);
+                    });
+                });
+                item.addEventListener('mouseout', () => {
+                     archDescriptions.forEach(desc => desc.classList.add('hidden'));
+                     archDefaultDesc.classList.remove('hidden');
+                });
+            });
+
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== `${target}-content`);
+                    });
+                });
+            });
+            tabs[0].click();
+        });
+    </script>
+
+</body>
+</html>
