@@ -22,29 +22,29 @@
     </style>
 </head>
 <body class="antialiased">
-
-    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <a href="#hero" class="text-xl font-bold text-gray-800">Vibe Coding</a>
-            <div class="hidden md:flex items-center space-x-6 text-sm">
-                <a href="#overview" class="nav-link">Overview</a>
-                <a href="#workflow" class="nav-link">Workflow</a>
-                <a href="#tools" class="nav-link">Key Tools</a>
-                <a href="#pros-cons" class="nav-link">Pros & Cons</a>
-                <a href="#future" class="nav-link">The Future</a>
-            </div>
-            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
-        </nav>
-        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
-            <a href="#overview" class="block py-2 text-sm nav-link">Overview</a>
-            <a href="#workflow" class="block py-2 text-sm nav-link">Workflow</a>
-            <a href="#tools" class="block py-2 text-sm nav-link">Key Tools</a>
-            <a href="#pros-cons" class="block py-2 text-sm nav-link">Pros & Cons</a>
-            <a href="#future" class="block py-2 text-sm nav-link">The Future</a>
+  
+<header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <a href="#hero" class="text-xl font-bold text-gray-800">Vibe Coding</a>
+        <div class="hidden md:flex items-center space-x-6 text-sm">
+            <a href="#overview" class="nav-link">Overview</a>
+            <a href="#workflow" class="nav-link">Workflow</a>
+            <a href="#tools" class="nav-link">Key Tools</a>
+            <a href="#pros-cons" class="nav-link">Pros & Cons</a>
+            <a href="#future" class="nav-link">The Future</a>
         </div>
-    </header>
+        <button id="mobile-menu-button" class="md:hidden p-2 rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+        </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
+        <a href="#overview" class="block py-2 text-sm nav-link">Overview</a>
+        <a href="#workflow" class="block py-2 text-sm nav-link">Workflow</a>
+        <a href="#tools" class="block py-2 text-sm nav-link">Key Tools</a>
+        <a href="#pros-cons" class="block py-2 text-sm nav-link">Pros & Cons</a>
+        <a href="#future" class="block py-2 text-sm nav-link">The Future</a>
+    </div>
+</header>
 
     <main>
         <section id="hero" class="min-h-[60vh] flex items-center bg-gray-50">
@@ -194,10 +194,14 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+ <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
             
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
