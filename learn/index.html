@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive guides on vibe coding and other topics">
+    <title>Learn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <header class="bg-blue-800 text-white sticky top-0 z-50 shadow-md">
+        <nav class="max-w-4xl mx-auto flex items-center justify-between p-4">
+            <a href="../index.html" class="text-2xl font-bold">Ram Woo</a>
+            <button id="nav-toggle" class="md:hidden focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+            <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold">
+                <li><a href="../index.html#home" class="hover:text-blue-200">Home</a></li>
+                <li><a href="../index.html#about" class="hover:text-blue-200">About</a></li>
+                <li><a href="../index.html#experience" class="hover:text-blue-200">Experience</a></li>
+                <li><a href="./" class="hover:text-blue-200">Learn</a></li>
+                <li><a href="../index.html#contact" class="hover:text-blue-200">Contact</a></li>
+            </ul>
+        </nav>
+        <ul id="nav-menu-mobile" class="md:hidden hidden flex-col space-y-2 px-4 pb-4 text-sm font-semibold bg-blue-800">
+            <li><a href="../index.html#home" class="block py-1 hover:text-blue-200">Home</a></li>
+            <li><a href="../index.html#about" class="block py-1 hover:text-blue-200">About</a></li>
+            <li><a href="../index.html#experience" class="block py-1 hover:text-blue-200">Experience</a></li>
+            <li><a href="./" class="block py-1 hover:text-blue-200">Learn</a></li>
+            <li><a href="../index.html#contact" class="block py-1 hover:text-blue-200">Contact</a></li>
+        </ul>
+    </header>
+    <main class="max-w-4xl mx-auto px-4">
+        <section class="py-20 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Learn</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Explore interactive guides and resources. Choose a category to begin.</p>
+        </section>
+        <section class="pb-20 grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between hover:shadow-lg transition">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">Vibe Coding</h2>
+                    <p class="text-gray-600 text-sm mb-4">Interactive guide to vibe coding principles and workflow.</p>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <a href="vibe-coding/ko.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">한국어</a>
+                    <a href="vibe-coding/en.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">English</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-blue-800 text-white text-center py-4">
+        &copy; 2025 Ram Woo
+    </footer>
+    <script>
+        const toggle = document.getElementById('nav-toggle');
+        const mobileMenu = document.getElementById('nav-menu-mobile');
+        toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    </script>
+</body>
+</html>
