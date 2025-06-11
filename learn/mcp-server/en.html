@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: Model Context Protocol (MCP)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Calm Neutral
+    Application Structure Plan: The SPA is designed with a top navigation bar and thematic, full-screen sections to create a focused, non-linear user experience. This structure allows users (likely developers or tech leaders) to directly access the information they need most, whether it's the high-level concept, the implementation details of a specific tool like Notion/Slack, or the critical security implications. The flow starts with a compelling introduction ('What is MCP?'), moves to foundational knowledge ('Core Concepts'), showcases market traction ('Ecosystem'), provides actionable instructions ('Practical Guides'), addresses risks ('Security Center'), and concludes with a look ahead ('Future Outlook'). This is more effective than a linear document scroll as it respects the user's specific interests and prior knowledge, enhancing usability and information retention for a technical audience.
+    Visualization & Content Choices: 
+    - M*N vs M+N Problem: Goal: Compare. Method: A simple, clear visual diagram using HTML/CSS Flexbox, which is more intuitive than a textual explanation.
+    - Architecture Diagram: Goal: Organize. Method: An interactive HTML/CSS component. Hovering over Host, Client, or Server reveals its description, promoting active learning.
+    - Ecosystem Growth: Goal: Change/Inform. Method: A Chart.js bar chart visualizes the rapid growth to 5,000+ servers, making the abstract number tangible and impactful. Library: Chart.js.
+    - Practical Guides (Notion/Slack): Goal: Organize/Inform. Method: A tabbed interface isolates complex setup instructions, preventing information overload. Within each tab, structured content with code blocks and lists makes the steps easy to follow.
+    - Security Vulnerabilities: Goal: Compare/Organize. Method: An interactive grid of cards. Each card represents a vulnerability. Clicking a card reveals the corresponding mitigation strategy. This interaction breaks down dense security information into manageable, engaging chunks.
+    - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F7F4; color: #333; }
+        .nav-link { transition: color 0.3s, border-color 0.3s; }
+        .nav-link.active { color: #4F46E5; border-bottom-color: #4F46E5; }
+        .nav-link:not(.active):hover { color: #6366F1; border-bottom-color: #A5B4FC; }
+        .tab-button.active { background-color: #4F46E5; color: #fff; }
+        .tab-button:not(.active) { background-color: #E0E7FF; color: #4338CA; }
+        .tab-button:not(.active):hover { background-color: #C7D2FE; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .security-card { perspective: 1000px; }
+        .security-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .security-card.is-flipped .security-card-inner { transform: rotateY(180deg); }
+        .security-card-front, .security-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; border-radius: 0.75rem; }
+        .security-card-front { background-color: #fff; border: 1px solid #ddd; }
+        .security-card-back { background-color: #4338CA; color: #fff; transform: rotateY(180deg); }
+        .section-fade-in { animation: fadeIn 1s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-[#F8F7F4]">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">MCP Interactive Report</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="nav-link px-3 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent">Introduction</a>
+                        <a href="#concepts" class="nav-link px-3 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent">Core Concepts</a>
+                        <a href="#ecosystem" class="nav-link px-3 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent">Ecosystem</a>
+                        <a href="#guides" class="nav-link px-3 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent">Practical Guides</a>
+                        <a href="#security" class="nav-link px-3 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent">Security Center</a>
+                        <a href="#future" class="nav-link px-3 py-2 text-sm font-medium text-gray-600 border-b-2 border-transparent">Future Outlook</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="intro" class="page-section container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 min-h-screen flex flex-col justify-center items-center text-center section-fade-in">
+            <h2 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                Model Context Protocol (MCP)
+            </h2>
+            <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-600">
+                An open standard for connecting AI models with external tools, data, and services. MCP solves complex integration challenges, making AI development faster, more efficient, and more secure.
+            </p>
+            <div class="mt-12 w-full max-w-4xl">
+                <h3 class="text-2xl font-bold text-gray-800">Solving the Integration Problem: M×N → M+N</h3>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-red-50 p-6 rounded-lg border border-red-200">
+                        <h4 class="font-bold text-lg text-red-800">Before MCP: The M x N Problem</h4>
+                        <p class="text-sm text-red-700 mt-2">Connecting M AI models to N tools requires M x N custom integrations.</p>
+                        <div class="mt-4 flex justify-around items-center h-32">
+                            <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                            </div>
+                            <div class="relative w-24 h-full flex items-center">
+                                <div class="absolute w-full h-px bg-red-400 transform rotate-12"></div>
+                                <div class="absolute w-full h-px bg-red-400 transform -rotate-12"></div>
+                                <div class="absolute w-full h-px bg-red-400 transform rotate-45"></div>
+                                <div class="absolute w-full h-px bg-red-400 transform -rotate-45"></div>
+                            </div>
+                            <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-red-300 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                        <h4 class="font-bold text-lg text-green-800">After MCP: The M + N Solution</h4>
+                        <p class="text-sm text-green-700 mt-2">If each model and tool adheres to the MCP standard, only M+N implementations are needed.</p>
+                        <div class="mt-4 flex justify-around items-center h-32">
+                             <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                            </div>
+                             <div class="relative w-24 h-full flex items-center justify-center">
+                                <div class="w-px h-full bg-green-400"></div>
+                            </div>
+                            <div class="flex flex-col space-y-2 items-center">
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                                <div class="w-8 h-8 bg-green-300 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="concepts" class="page-section bg-white min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Core Concepts</h2>
+                    <p class="mt-4 text-lg leading-8 text-gray-600">MCP defines clear communication rules based on a client-server architecture.</p>
+                </div>
+                <div class="mt-16">
+                    <h3 class="text-2xl font-bold text-center text-gray-800">Client-Server Architecture</h3>
+                    <p class="mt-2 text-center text-gray-600">Hover over a component to learn more.</p>
+                    <div class="mt-8 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 architecture-diagram">
+                        <div data-target="host-desc" class="arch-item flex flex-col items-center p-6 bg-gray-50 rounded-lg border border-gray-200 w-full md:w-1/4 transition-all duration-300 hover:shadow-lg hover:border-indigo-400">
+                            <span class="text-4xl">🏠</span>
+                            <h4 class="mt-2 text-lg font-semibold">MCP Host</h4>
+                        </div>
+                        <div class="text-3xl text-gray-400 font-thin">↔</div>
+                        <div data-target="client-desc" class="arch-item flex flex-col items-center p-6 bg-gray-50 rounded-lg border border-gray-200 w-full md:w-1/4 transition-all duration-300 hover:shadow-lg hover:border-indigo-400">
+                            <span class="text-4xl">🛡️</span>
+                            <h4 class="mt-2 text-lg font-semibold">MCP Client</h4>
+                        </div>
+                        <div class="text-3xl text-gray-400 font-thin">↔</div>
+                        <div data-target="server-desc" class="arch-item flex flex-col items-center p-6 bg-gray-50 rounded-lg border border-gray-200 w-full md:w-1/4 transition-all duration-300 hover:shadow-lg hover:border-indigo-400">
+                           <span class="text-4xl">⚙️</span>
+                            <h4 class="mt-2 text-lg font-semibold">MCP Server</h4>
+                        </div>
+                    </div>
+                    <div id="arch-description" class="mt-8 p-6 bg-indigo-50 text-indigo-900 rounded-lg min-h-[100px] flex items-center justify-center transition-opacity duration-300">
+                        <p id="host-desc" class="arch-desc hidden">The AI application that interacts with the end-user, like the Claude desktop app. It can connect to multiple servers simultaneously.</p>
+                        <p id="client-desc" class="arch-desc hidden">An intermediary the Host uses to manage each server connection. It runs in a sandboxed environment for security.</p>
+                        <p id="server-desc" class="arch-desc hidden">A program that provides domain-specific capabilities (tools, data) from services like Notion or Slack, conforming to the MCP standard.</p>
+                        <p id="arch-default-desc">Learn about the role of each component.</p>
+                    </div>
+                </div>
+                 <div class="mt-20">
+                    <h3 class="text-2xl font-bold text-center text-gray-800">Communication Primitives</h3>
+                    <p class="mt-2 text-center text-gray-600">Clients and servers communicate using these fundamental message types.</p>
+                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-indigo-700">Prompts (Server-Side)</h4>
+                            <p class="mt-2 text-gray-600">Pre-canned instructions or templates to guide the AI model.</p>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-indigo-700">Resources (Server-Side)</h4>
+                            <p class="mt-2 text-gray-600">Structured data to enrich the model's context (e.g., documents, code snippets).</p>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-indigo-700">Tools (Server-Side)</h4>
+                            <p class="mt-2 text-gray-600">Actionable functions the model can invoke (e.g., sending a message).</p>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-teal-700">Roots (Client-Side)</h4>
+                            <p class="mt-2 text-gray-600">Entry points into the host's file system or environment that the server can access with permission.</p>
+                        </div>
+                         <div class="p-6 bg-white rounded-lg shadow-md">
+                            <h4 class="font-bold text-teal-700">Sampling (Client-Side)</h4>
+                            <p class="mt-2 text-gray-600">A mechanism for the server to request the host AI to complete a task based on a prompt.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosystem" class="page-section container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">A Rapidly Growing Ecosystem</h2>
+                <p class="mt-4 text-lg leading-8 text-gray-600">With participation from major AI companies, MCP is becoming an industry standard.</p>
+            </div>
+            <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800">Key Participants</h3>
+                    <p class="mt-2 text-gray-600">Even competitors like Anthropic, OpenAI, and Google DeepMind are adopting MCP, building an open ecosystem together.</p>
+                    <div class="mt-8 flex flex-wrap gap-6 justify-center lg:justify-start">
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Anthropic</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">OpenAI</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Google DeepMind</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Microsoft</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Block</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Replit</div>
+                        <div class="p-4 bg-white rounded-lg shadow-md font-semibold">Sourcegraph</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800">MCP Server Growth Trend</h3>
+                     <div class="chart-container mt-4">
+                        <canvas id="ecosystemChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="guides" class="page-section bg-white min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">MCP Practical Guides</h2>
+                    <p class="mt-4 text-lg leading-8 text-gray-600">Learn how to connect MCP with Notion and Slack to extend your AI assistant's capabilities.</p>
+                </div>
+                <div class="mt-12">
+                    <div class="flex justify-center border-b border-gray-200">
+                        <button data-tab="notion" class="tab-button text-lg font-medium py-3 px-6 rounded-t-lg">Notion Integration</button>
+                        <button data-tab="slack" class="tab-button text-lg font-medium py-3 px-6 rounded-t-lg">Slack Integration</button>
+                    </div>
+                    <div class="mt-8">
+                        <div id="notion-content" class="tab-content">
+                            <h3 class="text-2xl font-bold text-gray-800">Notion: Connect Your Workspace to AI</h3>
+                            <p class="mt-2 text-gray-600">Let your AI read, write, and search your Notion databases and pages.</p>
+                            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-semibold text-lg">Key Features</h4>
+                                    <ul class="mt-4 space-y-2 list-disc list-inside text-gray-700">
+                                        <li>Query and search Notion databases</li>
+                                        <li>Create new pages and update existing ones</li>
+                                        <li>Summarize long documents and extract information</li>
+                                        <li>Automate task management and data entry</li>
+                                    </ul>
+                                    <h4 class="font-semibold text-lg mt-6">Setup Method</h4>
+                                     <ol class="mt-4 space-y-2 list-decimal list-inside text-gray-700">
+                                        <li>Create an 'Internal Integration' in Notion and get the secret token</li>
+                                        <li>Share the databases/pages you want to access with the integration</li>
+                                        <li>Add the server configuration to your MCP client (e.g., Claude Desktop)</li>
+                                    </ol>
+                                </div>
+                                <div class="bg-gray-800 text-white p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                                    <p class="text-gray-400 mb-2">// Claude Desktop config example (claude-desktop-config.json)</p>
+                                    <pre><code>{
+  "mcpServers": {
+    "notionApi": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@notionhq/notion-mcp-server"
+      ],
+      "env": {
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer YOUR_TOKEN_HERE\", \"Notion-Version\": \"2022-06-28\"}"
+      }
+    }
+  }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="slack-content" class="tab-content hidden">
+                            <h3 class="text-2xl font-bold text-gray-800">Slack: Bring AI into Team Communication</h3>
+                            <p class="mt-2 text-gray-600">Let your AI monitor Slack channels, send messages, and help with team Q&A.</p>
+                             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-semibold text-lg">Key Features</h4>
+                                    <ul class="mt-4 space-y-2 list-disc list-inside text-gray-700">
+                                        <li>Send messages to channels and reply in threads</li>
+                                        <li>Search and summarize channel conversation history</li>
+                                        <li>Send automated notifications for important updates</li>
+                                        <li>Automate workflows linked to other tools (Jira, Notion)</li>
+                                    </ul>
+                                     <h4 class="font-semibold text-lg mt-6">Setup Method</h4>
+                                     <ol class="mt-4 space-y-2 list-decimal list-inside text-gray-700">
+                                        <li>Create a new app and bot in the Slack API</li>
+                                        <li>Grant the necessary permissions (Scopes) and get the OAuth token</li>
+                                        <li>Set the environment variable (SLACK_BOT_TOKEN) and run the MCP server</li>
+                                        <li>Add the server configuration to your MCP client</li>
+                                    </ol>
+                                </div>
+                                <div class="bg-gray-800 text-white p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                                    <p class="text-gray-400 mb-2">// shouting-mcp-slack server execution example (Terminal)</p>
+                                    <pre><code># 1. Install package
+npm install -g shouting-mcp-slack
+
+# 2. Set environment variables
+export SLACK_BOT_TOKEN='xoxb-YOUR-TOKEN'
+export SLACK_TEAM_ID='T012345XYZ'
+
+# 3. Run server
+mcp-server-slack</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="security" class="page-section min-h-screen flex flex-col justify-center section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">MCP Security Center</h2>
+                    <p class="mt-4 text-lg leading-8 text-gray-600">With great power comes great responsibility. Review key security threats and mitigations.</p>
+                    <p class="mt-2 text-sm text-indigo-600 font-medium">Click a card to see the mitigation strategy.</p>
+                </div>
+                <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Security cards will be injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="page-section bg-white min-h-screen flex flex-col justify-center items-center text-center section-fade-in">
+             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">The Future of AI Applications with MCP</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                    MCP is more than just a technical standard; it's a key to fundamentally changing how AI interacts with our world. Based on standardization, openness, and robust security, we will enter an era of more intelligent, useful, and safe AI.
+                </p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+                    <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">Reduced Development Costs</h4>
+                        <p class="mt-2 text-sm text-indigo-700">Eliminate redundant development and reduce maintenance overhead with M+N integration.</p>
+                    </div>
+                     <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">Enhanced Interoperability</h4>
+                        <p class="mt-2 text-sm text-indigo-700">Freely combine various models and tools without vendor lock-in.</p>
+                    </div>
+                     <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">Powerful AI Experiences</h4>
+                        <p class="mt-2 text-sm text-indigo-700">Implement more accurate and context-aware AI using real-time data and external tools.</p>
+                    </div>
+                     <div class="bg-indigo-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-indigo-800">Accelerated Innovation</h4>
+                        <p class="mt-2 text-sm text-indigo-700">Anyone can create and share new AI tools and services on top of an open standard.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.page-section');
+
+            const securityVulnerabilities = [
+                { title: "Prompt Injection", description: "Manipulating an LLM with malicious input", mitigation: "Input validation, context isolation, treating all input as untrusted" },
+                { title: "Tool Poisoning (Supply Chain)", description: "Using malicious or unvetted MCP servers", mitigation: "Server vetting, code signing, using trusted registries" },
+                { title: "Mutable Tool Definitions", description: "An approved server later adds malicious functionality", mitigation: "Pinning and signing tool definitions, preventing runtime changes" },
+                { title: "Excessive Privilege", description: "Server requests/is granted more permissions than needed", mitigation: "Apply least privilege principle, limit token scopes" },
+                { title: "Unisolated Execution (RCE)", description: "Server vulnerability leads to remote code execution on the host", mitigation: "Sandboxing server execution environments, code audits" },
+                { title: "Ambiguous Tool ID", description: "Impersonating a trusted tool with a similar name", mitigation: "Strong server ID verification, signature-based validation" },
+                { title: "Credential Leakage", description: "Reusing tokens exposed in logs or code", mitigation: "Secure token storage, short-lived tokens" },
+                { title: "Insufficient Authentication", description: "Spoofing/MITM attacks on unauthenticated endpoints", mitigation: "Enforce mutual TLS (mTLS) and strong authentication" },
+            ];
+
+            const securityContainer = document.querySelector('#security .grid');
+            securityVulnerabilities.forEach(vuln => {
+                const card = document.createElement('div');
+                card.className = 'security-card h-48 cursor-pointer';
+                card.innerHTML = `
+                    <div class="security-card-inner">
+                        <div class="security-card-front">
+                            <h4 class="text-lg font-bold text-center text-red-700">${vuln.title}</h4>
+                            <p class="mt-2 text-sm text-center text-gray-600">${vuln.description}</p>
+                        </div>
+                        <div class="security-card-back">
+                            <h5 class="text-md font-bold text-center">Mitigation Strategy</h5>
+                            <p class="mt-2 text-sm text-center">${vuln.mitigation}</p>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    card.classList.toggle('is-flipped');
+                });
+                securityContainer.appendChild(card);
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                        entry.target.classList.add('section-fade-in');
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            navLinks[0].classList.add('active');
+
+            const ecosystemChartCtx = document.getElementById('ecosystemChart').getContext('2d');
+            const ecosystemChart = new Chart(ecosystemChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Nov 2024', 'Mar 2025', 'Apr 2025', 'May 2025'],
+                    datasets: [{
+                        label: 'Cumulative MCP Servers',
+                        data: [100, 1500, 3000, 5000], 
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Servers Registered in the Glama Directory'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.parsed.y.toLocaleString()} servers`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const archItems = document.querySelectorAll('.arch-item');
+            const archDescriptions = document.querySelectorAll('.arch-desc');
+            const archDefaultDesc = document.getElementById('arch-default-desc');
+
+            archItems.forEach(item => {
+                item.addEventListener('mouseover', () => {
+                    const targetId = item.dataset.target;
+                    archDefaultDesc.classList.add('hidden');
+                    archDescriptions.forEach(desc => {
+                        desc.classList.toggle('hidden', desc.id !== targetId);
+                    });
+                });
+                item.addEventListener('mouseout', () => {
+                     archDescriptions.forEach(desc => desc.classList.add('hidden'));
+                     archDefaultDesc.classList.remove('hidden');
+                });
+            });
+
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== `${target}-content`);
+                    });
+                });
+            });
+            tabs[0].click();
+        });
+    </script>
+
+</body>
+</html>
