@@ -62,7 +62,9 @@
                 <p class="text-lg text-slate-600">LinkedIn과 Notion API를 마스터하여 자동화의 한계를 넘어서세요.</p>
             </header>
 
-            <nav class="mb-8 border-b border-slate-200">
+
+            <nav id="tab-nav" class="mb-8 border-b border-slate-200">
+
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">개요</a></li>
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request 기초</a></li>
@@ -208,7 +210,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileMenu = document.getElementById('nav-menu-mobile');
     toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    const tabs = document.querySelectorAll('nav a');
+
+    const tabs = document.querySelectorAll('#tab-nav a');
+    const sidebarLinks = document.querySelectorAll('aside .nav-link');
+
     const sections = document.querySelectorAll('.content-section');
 
     const httpMethodSelect = document.getElementById('http-method');
@@ -221,6 +226,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const notionUseCases = document.getElementById('notion-use-cases');
     const notionCaseDisplay = document.getElementById('notion-case-display');
     const accordionButtons = document.querySelectorAll('[data-accordion-target]');
+
+
+    function showSection(targetId) {
+        tabs.forEach(t => {
+            if (t.dataset.tab === targetId) {
+                t.classList.add('tab-active');
+                t.classList.remove('tab-inactive');
+            } else {
+                t.classList.remove('tab-active');
+                t.classList.add('tab-inactive');
+            }
+        });
+        sections.forEach(section => {
+            if (section.id === targetId) {
+                section.classList.add('active');
+            } else {
+                section.classList.remove('active');
+            }
+        });
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+    }
 
     const linkedinData = {
         'li-text': {
@@ -406,23 +432,17 @@ document.addEventListener('DOMContentLoaded', function () {
     tabs.forEach(tab => {
         tab.addEventListener('click', e => {
             e.preventDefault();
-            const targetTab = e.target;
-            const targetId = targetTab.dataset.tab;
 
-            tabs.forEach(t => {
-                t.classList.remove('tab-active');
-                t.classList.add('tab-inactive');
-            });
+            showSection(tab.dataset.tab);
+        });
+    });
 
-            targetTab.classList.add('tab-active');
-            targetTab.classList.remove('tab-inactive');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            showSection(targetId);
 
-            sections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === targetId) {
-                    section.classList.add('active');
-                }
-            });
         });
     });
 
