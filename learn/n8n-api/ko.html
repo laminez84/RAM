@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n8n API 연동 가이드: LinkedIn & Notion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #F9F9F9; color: #1f2937; }
+        .tab-active { border-bottom-color: #2563eb; color: #2563eb; font-weight: 500; }
+        .tab-inactive { border-bottom-color: transparent; color: #6b7280; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .code-block { background-color: #1f2937; color: #d1d5db; padding: 1rem; border-radius: 0.5rem; font-family: monospace; white-space: pre-wrap; word-break: break-all; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+    </style>
+</head>
+<body class="antialiased">
+
+<header class="bg-blue-800 text-white sticky top-0 z-50 shadow-md">
+    <nav class="max-w-4xl mx-auto flex items-center justify-between p-4">
+        <a href="../../index.html#home" class="text-2xl font-bold">Ram Woo</a>
+        <button id="nav-toggle" class="md:hidden focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+        </button>
+        <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold">
+            <li><a href="../../index.html#home" class="hover:text-blue-200">Home</a></li>
+            <li><a href="../../about.html" class="hover:text-blue-200">About</a></li>
+            <li><a href="../../experience.html" class="hover:text-blue-200">Experience</a></li>
+            <li><a href="../../learn/" class="hover:text-blue-200">Learn</a></li>
+            <li><a href="../../index.html#contact" class="hover:text-blue-200">Contact</a></li>
+        </ul>
+    </nav>
+    <ul id="nav-menu-mobile" class="md:hidden hidden flex-col space-y-2 px-4 pb-4 text-sm font-semibold bg-blue-800">
+        <li><a href="../../index.html#home" class="block py-1 hover:text-blue-200">Home</a></li>
+        <li><a href="../../about.html" class="block py-1 hover:text-blue-200">About</a></li>
+        <li><a href="../../experience.html" class="block py-1 hover:text-blue-200">Experience</a></li>
+        <li><a href="../../learn/" class="block py-1 hover:text-blue-200">Learn</a></li>
+        <li><a href="../../index.html#contact" class="block py-1 hover:text-blue-200">Contact</a></li>
+    </ul>
+</header>
+
+<div class="flex">
+    <aside class="hidden md:block w-48 p-4 sticky top-20 self-start">
+        <ul class="space-y-2 text-sm font-semibold">
+            <li><a href="#home" class="nav-link">개요</a></li>
+            <li><a href="#http-basics" class="nav-link">HTTP Request 기초</a></li>
+            <li><a href="#linkedin" class="nav-link">LinkedIn 연동</a></li>
+            <li><a href="#notion" class="nav-link">Notion 연동</a></li>
+            <li><a href="#advanced" class="nav-link">고급 워크플로우</a></li>
+        </ul>
+    </aside>
+
+    <main class="flex-1">
+        <section id="home" class="container mx-auto p-4 md:p-8">
+            <header class="mb-10 text-left">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">n8n 맞춤형 API 연동 가이드</h1>
+                <p class="text-lg text-slate-600">LinkedIn과 Notion API를 마스터하여 자동화의 한계를 넘어서세요.</p>
+            </header>
+
+            <nav class="mb-8 border-b border-slate-200">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">개요</a></li>
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request 기초</a></li>
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="linkedin">LinkedIn 연동</a></li>
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="notion">Notion 연동</a></li>
+                    <li><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="advanced">고급 워크플로우</a></li>
+                </ul>
+            </nav>
+        </section>
+
+        <section id="http-basics" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">HTTP Request 노드 마스터하기</h2>
+                <p class="mb-6 text-slate-600">HTTP Request 노드는 모든 API 연동의 핵심입니다. URL, 메서드, 헤더, 본문을 올바르게 구성하는 방법을 이해하는 것이 중요합니다. 아래의 인터랙티브 빌더를 통해 각 요소가 실제 API 요청에서 어떻게 작동하는지 직접 확인해 보세요.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">요청 구성 요소</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="http-method" class="block text-sm font-medium text-slate-700">HTTP 메서드</label>
+                                <select id="http-method" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                    <option>POST</option>
+                                    <option>GET</option>
+                                    <option>PUT</option>
+                                    <option>DELETE</option>
+                                </select>
+                                <p class="mt-1 text-xs text-slate-500">데이터 생성(POST), 조회(GET), 수정(PUT), 삭제(DELETE) 등 작업에 맞는 메서드를 선택합니다.</p>
+                            </div>
+                            <div>
+                                <label for="add-header" class="block text-sm font-medium text-slate-700">헤더 추가</label>
+                                <button id="add-header" class="mt-1 bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Authorization 헤더 추가/제거</button>
+                                <p class="mt-1 text-xs text-slate-500">인증 토큰, 콘텐츠 타입 등 메타데이터를 전달합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">실시간 요청 미리보기</h3>
+                        <div id="request-preview" class="code-block h-full"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="linkedin" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">LinkedIn API 연동 심층 분석</h2>
+                <p class="mb-6 text-slate-600">LinkedIn API는 전문 네트워킹 자동화를 위한 강력한 도구이지만, 접근 방식과 인증 과정이 복잡할 수 있습니다. 공식 API의 제약과 대안, 그리고 n8n을 활용한 구체적인 자동화 사례를 살펴봅니다.</p>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">인증 방식 비교</h3>
+                    <p class="mb-4 text-slate-600">공식 LinkedIn API 접근은 '파트너 프로그램' 승인이 필요하여 진입 장벽이 높습니다. 이 때문에 많은 사용자들이 더 간편한 타사 API를 대안으로 고려합니다. 아래 차트는 각 방식의 상대적인 복잡도를 보여줍니다.</p>
+                    <div class="chart-container">
+                        <canvas id="linkedinAuthChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">API 사용 사례 탐색기</h3>
+                    <p class="mb-4 text-slate-600">왼쪽 메뉴에서 자동화하려는 작업을 선택하면, 오른쪽에 해당 작업을 위한 n8n HTTP Request 노드 설정 예시가 나타납니다.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-1/3">
+                            <ul id="linkedin-use-cases" class="space-y-2">
+                                <li><button data-case="li-text" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">텍스트 게시물 공유</button></li>
+                                <li><button data-case="li-article" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">기사/URL 공유</button></li>
+                                <li><button data-case="li-profile" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">프로필 데이터 검색 (타사 API)</button></li>
+                            </ul>
+                        </div>
+                        <div id="linkedin-case-display" class="w-full md:w-2/3 bg-slate-100 p-4 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="notion" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">Notion API 연동 심층 분석</h2>
+                <p class="mb-6 text-slate-600">Notion API를 활용하면 문서 및 데이터베이스 관리를 자동화할 수 있습니다. Notion의 고유한 인증 방식과 권한 모델을 이해하고, n8n으로 강력한 생산성 워크플로우를 구축하는 방법을 알아봅니다.</p>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">핵심 원칙: 세분화된 보안</h3>
+                    <p class="mb-4 text-slate-600">Notion은 API 통합 토큰을 생성한 후에도, 자동화하려는 특정 페이지나 데이터베이스에 해당 통합을 '공유'해야 합니다. 이는 토큰이 유출되더라도 피해를 최소화하는 강력한 보안 장치입니다. API 호출 전, <span class="font-bold text-red-600">반드시 페이지 공유 설정을 확인하세요.</span></p>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">API 사용 사례 탐색기</h3>
+                    <p class="mb-4 text-slate-600">왼쪽 메뉴에서 자동화하려는 작업을 선택하면, 오른쪽에 해당 작업을 위한 n8n HTTP Request 노드 설정 예시가 나타납니다.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-1/3">
+                            <ul id="notion-use-cases" class="space-y-2">
+                                <li><button data-case="no-create-page" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">데이터베이스에 페이지 생성</button></li>
+                                <li><button data-case="no-append-block" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">페이지에 콘텐츠 블록 추가</button></li>
+                                <li><button data-case="no-query-db" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">데이터베이스 필터링 및 조회</button></li>
+                            </ul>
+                        </div>
+                        <div id="notion-case-display" class="w-full md:w-2/3 bg-slate-100 p-4 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">안정적인 워크플로우를 위한 모범 사례</h2>
+                <p class="mb-6 text-slate-600">강력하고 유지보수 가능한 자동화 워크플로우를 구축하려면 몇 가지 핵심 원칙을 따라야 합니다. 오류 처리, API 속도 제한 준수, 안전한 자격 증명 관리는 필수입니다.</p>
+
+                <div class="space-y-4" id="accordion-best-practices">
+                    <div class="border border-slate-200 rounded-lg">
+                        <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-1">
+                            <span>견고한 오류 처리</span>
+                            <span class="transform transition-transform duration-200">+</span>
+                        </button>
+                        <div id="bp-1" class="hidden p-4 border-t border-slate-200 text-slate-600">
+                            API 호출은 언제든 실패할 수 있습니다. 워크플로우 중단을 방지하려면 n8n의 <code>Try/Catch</code> 블록을 사용하여 예외 상황을 관리하세요. 실패 시 알림을 보내거나 대체 경로를 실행하도록 구성할 수 있습니다. <code>401 Unauthorized</code> 오류는 자격 증명 문제를, <code>400 Bad Request</code>는 요청 형식 오류를 의미하므로 n8n 실행 로그를 자세히 확인하는 것이 중요합니다.
+                        </div>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg">
+                        <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-2">
+                            <span>API 속도 제한 준수</span>
+                            <span class="transform transition-transform duration-200">+</span>
+                        </button>
+                        <div id="bp-2" class="hidden p-4 border-t border-slate-200 text-slate-600">
+                            대부분의 API는 단시간 내에 보낼 수 있는 요청 수를 제한합니다. 예를 들어 LinkedIn은 회원당 일일 150개 게시물 제한이 있습니다. 루프나 대량 처리 워크플로우에서는 n8n의 <code>Wait</code> 노드를 사용하여 API 호출 사이에 의도적인 지연(예: 1-2초)을 추가하세요. 이는 서비스 차단이나 계정 정지를 방지하는 가장 좋은 방법입니다.
+                        </div>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg">
+                        <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-3">
+                            <span>안전한 자격 증명 관리</span>
+                            <span class="transform transition-transform duration-200">+</span>
+                        </button>
+                        <div id="bp-3" class="hidden p-4 border-t border-slate-200 text-slate-600">
+                            API 키나 토큰과 같은 민감한 정보를 워크플로우 노드에 직접 입력하지 마세요. n8n의 내장된 자격 증명(Credentials) 시스템을 사용하면 모든 민감 정보를 암호화하여 안전하게 저장하고, 워크플로우에서 <code>{{ $credentials.yourCredentialName.propertyName }}</code>와 같은 표현식을 통해 참조할 수 있습니다. 이는 보안을 강화하고 자격 증명 관리를 용이하게 합니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.getElementById('nav-toggle');
+    const mobileMenu = document.getElementById('nav-menu-mobile');
+    toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    const tabs = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('.content-section');
+
+    const httpMethodSelect = document.getElementById('http-method');
+    const addHeaderBtn = document.getElementById('add-header');
+    const requestPreview = document.getElementById('request-preview');
+    let hasAuthHeader = false;
+
+    const linkedinUseCases = document.getElementById('linkedin-use-cases');
+    const linkedinCaseDisplay = document.getElementById('linkedin-case-display');
+    const notionUseCases = document.getElementById('notion-use-cases');
+    const notionCaseDisplay = document.getElementById('notion-case-display');
+    const accordionButtons = document.querySelectorAll('[data-accordion-target]');
+
+    const linkedinData = {
+        'li-text': {
+            title: '텍스트 게시물 공유',
+            method: 'POST',
+            url: 'https://api.linkedin.com/v2/ugcPosts',
+            headers: [
+                'Authorization: Bearer {{ YOUR_ACCESS_TOKEN }}',
+                'X-Restli-Protocol-Version: 2.0.0',
+                'Content-Type: application/json',
+            ],
+            body: {
+                author: 'urn:li:person:YOUR_PERSON_URN',
+                lifecycleState: 'PUBLISHED',
+                specificContent: {
+                    'com.linkedin.ugc.ShareContent': {
+                        shareCommentary: {
+                            text: '안녕하세요, LinkedIn! n8n에서 자동 생성된 게시물입니다. #자동화'
+                        },
+                        shareMediaCategory: 'NONE'
+                    }
+                },
+                visibility: {
+                    'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+                }
+            }
+        },
+        'li-article': {
+            title: '기사/URL 공유',
+            method: 'POST',
+            url: 'https://api.linkedin.com/v2/ugcPosts',
+            headers: [
+                'Authorization: Bearer {{ YOUR_ACCESS_TOKEN }}',
+                'X-Restli-Protocol-Version: 2.0.0',
+                'Content-Type: application/json',
+            ],
+            body: {
+                author: 'urn:li:person:YOUR_PERSON_URN',
+                lifecycleState: 'PUBLISHED',
+                specificContent: {
+                    'com.linkedin.ugc.ShareContent': {
+                        shareCommentary: {
+                            text: 'n8n에 대한 흥미로운 기사입니다!'
+                        },
+                        shareMediaCategory: 'ARTICLE',
+                        media: [{
+                            status: 'READY',
+                            originalUrl: 'https://n8n.io/'
+                        }]
+                    }
+                },
+                visibility: {
+                    'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+                }
+            }
+        },
+        'li-profile': {
+            title: '프로필 데이터 검색 (타사 API)',
+            method: 'GET',
+            url: 'https://api.linkedapi.io/data/person/',
+            headers: ['Authorization: Bearer {{ YOUR_LINKEDAPI_TOKEN }}'],
+            body: null,
+            note: '이 예시는 공식 API가 아닌, 접근이 용이한 타사 API (Linked API)를 사용합니다. 공식 API의 복잡한 인증 절차를 우회할 수 있는 대안입니다.'
+        }
+    };
+
+    const notionData = {
+        'no-create-page': {
+            title: '데이터베이스에 페이지 생성',
+            method: 'POST',
+            url: 'https://api.notion.com/v1/pages',
+            headers: [
+                'Authorization: Bearer {{ YOUR_NOTION_SECRET }}',
+                'Content-Type: application/json',
+                'Notion-Version: 2022-06-28'
+            ],
+            body: {
+                parent: { database_id: 'YOUR_DATABASE_ID' },
+                properties: {
+                    'Name': {
+                        title: [{
+                            text: { content: 'n8n에서 생성된 새 아이디어' }
+                        }]
+                    },
+                    'Status': {
+                        status: { name: 'To do' }
+                    }
+                },
+                children: [{
+                    object: 'block',
+                    type: 'paragraph',
+                    paragraph: {
+                        rich_text: [{
+                            type: 'text',
+                            text: { content: '이 프로젝트는 n8n 워크플로우를 통해 자동으로 추가되었습니다.' }
+                        }]
+                    }
+                }]
+            }
+        },
+        'no-append-block': {
+            title: '페이지에 콘텐츠 블록 추가',
+            method: 'PATCH',
+            url: 'https://api.notion.com/v1/blocks/YOUR_PAGE_ID/children',
+            headers: [
+                'Authorization: Bearer {{ YOUR_NOTION_SECRET }}',
+                'Content-Type: application/json',
+                'Notion-Version: 2022-06-28'
+            ],
+            body: {
+                children: [{
+                    object: 'block',
+                    type: 'heading_2',
+                    heading_2: {
+                        rich_text: [{
+                            type: 'text',
+                            text: { content: '새로운 하위 제목' }
+                        }]
+                    }
+                }]
+            }
+        },
+        'no-query-db': {
+            title: '데이터베이스 필터링 및 조회',
+            method: 'POST',
+            url: 'https://api.notion.com/v1/databases/YOUR_DATABASE_ID/query',
+            headers: [
+                'Authorization: Bearer {{ YOUR_NOTION_SECRET }}',
+                'Content-Type: application/json',
+                'Notion-Version: 2022-06-28'
+            ],
+            body: {
+                filter: {
+                    property: 'Status',
+                    status: { equals: 'Done' }
+                },
+                sorts: [{
+                    property: 'Created time',
+                    direction: 'descending'
+                }]
+            }
+        }
+    };
+
+    function updateRequestPreview() {
+        let previewText = `Method: ${httpMethodSelect.value}\n`;
+        previewText += `URL: https://api.example.com/data\n\n`;
+        previewText += `Headers:\n`;
+        previewText += `  Content-Type: application/json\n`;
+        if (hasAuthHeader) {
+            previewText += `  Authorization: Bearer YOUR_TOKEN\n`;
+        }
+        if (httpMethodSelect.value !== 'GET' && httpMethodSelect.value !== 'DELETE') {
+            previewText += `\nBody (JSON):\n`;
+            previewText += JSON.stringify({ key: "value", "anotherKey": 123 }, null, 2);
+        }
+        requestPreview.textContent = previewText;
+    }
+
+    function displayCase(data, container) {
+        let headersHtml = data.headers.map(h => `<li>${h}</li>`).join('');
+        let bodyHtml = data.body ? `<div class="code-block">${JSON.stringify(data.body, null, 2)}</div>` : '<p>본문 없음</p>';
+        let noteHtml = data.note ? `<p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-3 rounded-md">${data.note}</p>` : '';
+
+        container.innerHTML = `
+            <h4 class="text-lg font-bold mb-2">${data.title}</h4>
+            <div class="space-y-3 text-sm">
+                <p><strong>메서드:</strong> <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">${data.method}</span></p>
+                <p><strong>URL:</strong> <span class="font-mono text-xs">${data.url}</span></p>
+                <div>
+                    <p class="font-bold">헤더:</p>
+                    <ul class="list-disc list-inside pl-2 font-mono text-xs">${headersHtml}</ul>
+                </div>
+                <div>
+                    <p class="font-bold">본문 (JSON):</p>
+                    ${bodyHtml}
+                </div>
+                ${noteHtml}
+            </div>
+        `;
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', e => {
+            e.preventDefault();
+            const targetTab = e.target;
+            const targetId = targetTab.dataset.tab;
+
+            tabs.forEach(t => {
+                t.classList.remove('tab-active');
+                t.classList.add('tab-inactive');
+            });
+
+            targetTab.classList.add('tab-active');
+            targetTab.classList.remove('tab-inactive');
+
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                }
+            });
+        });
+    });
+
+    httpMethodSelect.addEventListener('change', updateRequestPreview);
+    addHeaderBtn.addEventListener('click', () => {
+        hasAuthHeader = !hasAuthHeader;
+        updateRequestPreview();
+    });
+
+    if (linkedinUseCases) {
+        linkedinUseCases.addEventListener('click', e => {
+            if (e.target.tagName === 'BUTTON') {
+                const caseKey = e.target.dataset.case;
+                displayCase(linkedinData[caseKey], linkedinCaseDisplay);
+            }
+        });
+        displayCase(linkedinData['li-text'], linkedinCaseDisplay);
+    }
+
+    if (notionUseCases) {
+        notionUseCases.addEventListener('click', e => {
+            if (e.target.tagName === 'BUTTON') {
+                const caseKey = e.target.dataset.case;
+                displayCase(notionData[caseKey], notionCaseDisplay);
+            }
+        });
+        displayCase(notionData['no-create-page'], notionCaseDisplay);
+    }
+
+    accordionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.dataset.accordionTarget;
+            const targetPanel = document.getElementById(targetId);
+            const icon = button.querySelector('span:last-child');
+
+            if (targetPanel.classList.contains('hidden')) {
+                targetPanel.classList.remove('hidden');
+                icon.textContent = '-';
+            } else {
+                targetPanel.classList.add('hidden');
+                icon.textContent = '+';
+            }
+        });
+    });
+
+    const linkedinCtx = document.getElementById('linkedinAuthChart')?.getContext('2d');
+    if (linkedinCtx) {
+        new Chart(linkedinCtx, {
+            type: 'bar',
+            data: {
+                labels: ['공식 API (직접 연동)', '타사 API (예: LinkedAPI)'],
+                datasets: [{
+                    label: '상대적 복잡도 및 진입 장벽',
+                    data: [90, 30],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.6)',
+                        'rgba(59, 130, 246, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(59, 130, 246, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                if (value === 30) return '낮음';
+                                if (value === 90) return '높음';
+                                return '';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.label === '공식 API (직접 연동)') {
+                                    label += '높음 (파트너 승인, OAuth 2.0 설정 필요)';
+                                } else {
+                                    label += '낮음 (API 키 기반, 즉시 사용 가능)';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    updateRequestPreview();
+});
+</script>
+</body>
+</html>
