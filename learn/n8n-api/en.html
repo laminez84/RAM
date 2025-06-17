@@ -56,11 +56,9 @@
     </aside>
 
     <main class="flex-1">
-        <section id="home" class="container mx-auto p-4 md:p-8">
-            <header class="mb-10 text-left">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">n8n Custom API Integration Guide</h1>
-                <p class="text-lg text-slate-600">Master LinkedIn and Notion APIs to push the boundaries of automation.</p>
-            </header>
+        <section id="home" class="content-section active container mx-auto p-4 md:p-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">n8n Custom API Integration Guide</h1>
+            <p class="text-lg text-slate-600 mb-6">Use the HTTP Request node to call external services like LinkedIn and Notion. This guide helps you go beyond the built-in nodes and build tailored automations.</p>
 
             <nav id="tab-nav" class="mb-8 border-b border-slate-200">
 
@@ -524,6 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     x: {
                         beginAtZero: true,
                         max: 100,
+    showSection('home');
                         ticks: {
                            callback: function(value) {
                                if (value === 30) return 'Low';
