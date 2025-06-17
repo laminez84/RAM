@@ -62,7 +62,7 @@
                 <p class="text-lg text-slate-600">LinkedIn과 Notion API를 마스터하여 자동화의 한계를 넘어서세요.</p>
             </header>
 
-            <nav class="mb-8 border-b border-slate-200">
+            <nav id="tab-nav" class="mb-8 border-b border-slate-200">
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">개요</a></li>
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request 기초</a></li>
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileMenu = document.getElementById('nav-menu-mobile');
     toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    const tabs = document.querySelectorAll('nav a');
+    const tabs = document.querySelectorAll('#tab-nav a');
     const sections = document.querySelectorAll('.content-section');
 
     const httpMethodSelect = document.getElementById('http-method');
