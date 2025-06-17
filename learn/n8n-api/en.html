@@ -63,6 +63,7 @@
             </header>
 
             <nav id="tab-nav" class="mb-8 border-b border-slate-200">
+
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">Overview</a></li>
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request Basics</a></li>
@@ -212,8 +213,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileMenu = document.getElementById('nav-menu-mobile');
     toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
+
     const tabs = document.querySelectorAll('#tab-nav a');
     const sidebarLinks = document.querySelectorAll('aside .nav-link');
+
     const sections = document.querySelectorAll('.content-section');
 
     const httpMethodSelect = document.getElementById('http-method');
@@ -226,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const notionUseCases = document.getElementById('notion-use-cases');
     const notionCaseDisplay = document.getElementById('notion-case-display');
     const accordionButtons = document.querySelectorAll('[data-accordion-target]');
+
 
     function showSection(targetId) {
         tabs.forEach(t => {
@@ -246,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     }
+
 
     const linkedinData = {
         'li-text': {
@@ -433,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
     tabs.forEach(tab => {
         tab.addEventListener('click', e => {
             e.preventDefault();
+
             showSection(tab.dataset.tab);
         });
     });
@@ -442,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             const targetId = link.getAttribute('href').substring(1);
             showSection(targetId);
+
         });
     });
 
