@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n8n API Integration Guide: LinkedIn & Notion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F9F9F9; color: #1f2937; }
+        .tab-active { border-bottom-color: #2563eb; color: #2563eb; font-weight: 500; }
+        .tab-inactive { border-bottom-color: transparent; color: #6b7280; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .code-block { background-color: #1f2937; color: #d1d5db; padding: 1rem; border-radius: 0.5rem; font-family: monospace; white-space: pre-wrap; word-break: break-all; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+    </style>
+</head>
+<body class="antialiased">
+
+<header class="bg-blue-800 text-white sticky top-0 z-50 shadow-md">
+    <nav class="max-w-4xl mx-auto flex items-center justify-between p-4">
+        <a href="../../index.html#home" class="text-2xl font-bold">Ram Woo</a>
+        <button id="nav-toggle" class="md:hidden focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+        </button>
+        <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold">
+            <li><a href="../../index.html#home" class="hover:text-blue-200">Home</a></li>
+            <li><a href="../../about.html" class="hover:text-blue-200">About</a></li>
+            <li><a href="../../experience.html" class="hover:text-blue-200">Experience</a></li>
+            <li><a href="../../learn/" class="hover:text-blue-200">Learn</a></li>
+            <li><a href="../../index.html#contact" class="hover:text-blue-200">Contact</a></li>
+        </ul>
+    </nav>
+    <ul id="nav-menu-mobile" class="md:hidden hidden flex-col space-y-2 px-4 pb-4 text-sm font-semibold bg-blue-800">
+        <li><a href="../../index.html#home" class="block py-1 hover:text-blue-200">Home</a></li>
+        <li><a href="../../about.html" class="block py-1 hover:text-blue-200">About</a></li>
+        <li><a href="../../experience.html" class="block py-1 hover:text-blue-200">Experience</a></li>
+        <li><a href="../../learn/" class="block py-1 hover:text-blue-200">Learn</a></li>
+        <li><a href="../../index.html#contact" class="block py-1 hover:text-blue-200">Contact</a></li>
+    </ul>
+</header>
+
+<div class="flex">
+    <aside class="hidden md:block w-48 p-4 sticky top-20 self-start">
+        <ul class="space-y-2 text-sm font-semibold">
+            <li><a href="#home" class="nav-link">Overview</a></li>
+            <li><a href="#http-basics" class="nav-link">HTTP Request Basics</a></li>
+            <li><a href="#linkedin" class="nav-link">LinkedIn Integration</a></li>
+            <li><a href="#notion" class="nav-link">Notion Integration</a></li>
+            <li><a href="#advanced" class="nav-link">Advanced Workflows</a></li>
+        </ul>
+    </aside>
+
+    <main class="flex-1">
+        <section id="home" class="container mx-auto p-4 md:p-8">
+            <header class="mb-10 text-left">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">n8n Custom API Integration Guide</h1>
+                <p class="text-lg text-slate-600">Master LinkedIn and Notion APIs to push the boundaries of automation.</p>
+            </header>
+
+            <nav id="tab-nav" class="mb-8 border-b border-slate-200">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">Overview</a></li>
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request Basics</a></li>
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="linkedin">LinkedIn Integration</a></li>
+                    <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="notion">Notion Integration</a></li>
+                    <li><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="advanced">Advanced Workflows</a></li>
+                </ul>
+            </nav>
+        </section>
+
+        <section id="http-basics" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">Mastering the HTTP Request Node</h2>
+                <p class="mb-6 text-slate-600">The HTTP Request node is at the core of all API integrations. It is crucial to understand how to correctly configure the URL, method, headers, and body. Use the interactive builder below to see how each element works in a real API request.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Request Components</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="http-method" class="block text-sm font-medium text-slate-700">HTTP Method</label>
+                                <select id="http-method" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                    <option>POST</option>
+                                    <option>GET</option>
+                                    <option>PUT</option>
+                                    <option>DELETE</option>
+                                </select>
+                                <p class="mt-1 text-xs text-slate-500">Select the method appropriate for your operation (e.g., POST for creating data, GET for retrieving, PUT for updating, DELETE for removing).</p>
+                            </div>
+                            <div>
+                                <label for="add-header" class="block text-sm font-medium text-slate-700">Add Header</label>
+                                <button id="add-header" class="mt-1 bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">Add/Remove Authorization Header</button>
+                                <p class="mt-1 text-xs text-slate-500">Used to pass metadata like authentication tokens or content types.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="text-xl font-semibold mb-4">Live Request Preview</h3>
+                         <div id="request-preview" class="code-block h-full"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="linkedin" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">In-depth Analysis: LinkedIn API Integration</h2>
+                <p class="mb-6 text-slate-600">The LinkedIn API is a powerful tool for professional networking automation, but its access methods and authentication processes can be complex. We'll explore the limitations of the official API, alternatives, and specific automation examples using n8n.</p>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Authentication Method Comparison</h3>
+                    <p class="mb-4 text-slate-600">Accessing the official LinkedIn API often requires 'Partner Program' approval, which presents a high barrier to entry. This leads many users to consider simpler third-party APIs as alternatives. The chart below illustrates the relative complexity of each method.</p>
+                    <div class="chart-container">
+                        <canvas id="linkedinAuthChart"></canvas>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">API Use Case Explorer</h3>
+                    <p class="mb-4 text-slate-600">Select an automation task from the left menu to view an example n8n HTTP Request node configuration on the right.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-1/3">
+                            <ul id="linkedin-use-cases" class="space-y-2">
+                                <li><button data-case="li-text" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Share Text Post</button></li>
+                                <li><button data-case="li-article" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Share Article/URL</button></li>
+                                <li><button data-case="li-profile" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Retrieve Profile Data (Third-Party API)</button></li>
+                            </ul>
+                        </div>
+                        <div id="linkedin-case-display" class="w-full md:w-2/3 bg-slate-100 p-4 rounded-lg">
+                            <!-- Dynamic content here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="notion" class="content-section container mx-auto p-4 md:p-8">
+             <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">In-depth Analysis: Notion API Integration</h2>
+                <p class="mb-6 text-slate-600">The Notion API allows you to automate document and database management. Understand Notion's unique authentication and permission models, and learn how to build powerful productivity workflows with n8n.</p>
+                
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Core Principle: Granular Security</h3>
+                    <p class="mb-4 text-slate-600">Even after creating an API integration token, Notion requires you to 'share' that integration with the specific pages or databases you want to automate. This is a strong security measure to minimize damage if a token is compromised. Before making API calls, <span class="font-bold text-red-600">always check your page sharing settings.</span></p>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">API Use Case Explorer</h3>
+                    <p class="mb-4 text-slate-600">Select an automation task from the left menu to view an example n8n HTTP Request node configuration on the right.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-1/3">
+                            <ul id="notion-use-cases" class="space-y-2">
+                                <li><button data-case="no-create-page" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Create Page in Database</button></li>
+                                <li><button data-case="no-append-block" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Append Content Block to Page</button></li>
+                                <li><button data-case="no-query-db" class="w-full text-left bg-slate-100 p-3 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Query and Filter Database</button></li>
+                            </ul>
+                        </div>
+                        <div id="notion-case-display" class="w-full md:w-2/3 bg-slate-100 p-4 rounded-lg">
+                            <!-- Dynamic content here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="advanced" class="content-section container mx-auto p-4 md:p-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">Best Practices for Robust Workflows</h2>
+                <p class="mb-6 text-slate-600">To build powerful and maintainable automation workflows, it's crucial to follow a few key principles. Error handling, adhering to API rate limits, and secure credential management are essential.</p>
+                
+                <div class="space-y-4" id="accordion-best-practices">
+                    <div class="border border-slate-200 rounded-lg">
+                        <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-1">
+                            <span>Robust Error Handling</span>
+                            <span class="transform transition-transform duration-200">+</span>
+                        </button>
+                        <div id="bp-1" class="hidden p-4 border-t border-slate-200 text-slate-600">
+                            API calls can fail at any time. Implement n8n's `Try/Catch` blocks to gracefully manage exceptions and prevent workflow interruptions. You can configure it to send notifications or execute alternative paths upon failure. A `401 Unauthorized` error indicates credential issues, while a `400 Bad Request` suggests request format errors; always check n8n execution logs for details.
+                        </div>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg">
+                        <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-2">
+                            <span>Adhering to API Rate Limits</span>
+                            <span class="transform transition-transform duration-200">+</span>
+                        </button>
+                        <div id="bp-2" class="hidden p-4 border-t border-slate-200 text-slate-600">
+                            Most APIs limit the number of requests you can send within a short period. For instance, LinkedIn has a daily limit of 150 posts per member. In loops or bulk processing workflows, use n8n's `Wait` node to add intentional delays (e.g., 1-2 seconds) between API calls. This is the best way to prevent service blockages or account suspensions.
+                        </div>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg">
+                        <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-3">
+                            <span>Secure Credential Management</span>
+                            <span class="transform transition-transform duration-200">+</span>
+                        </button>
+                         <div id="bp-3" class="hidden p-4 border-t border-slate-200 text-slate-600">
+                            Never hardcode sensitive information like API keys or tokens directly into workflow nodes. n8n's built-in Credentials system allows you to securely store and encrypt all sensitive data, and reference it in your workflows using expressions like `{{ $credentials.yourCredentialName.propertyName }}`. This enhances security and simplifies credential management.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.getElementById('nav-toggle');
+    const mobileMenu = document.getElementById('nav-menu-mobile');
+    toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    const tabs = document.querySelectorAll('#tab-nav a');
+    const sidebarLinks = document.querySelectorAll('aside .nav-link');
+    const sections = document.querySelectorAll('.content-section');
+
+    const httpMethodSelect = document.getElementById('http-method');
+    const addHeaderBtn = document.getElementById('add-header');
+    const requestPreview = document.getElementById('request-preview');
+    let hasAuthHeader = false;
+
+    const linkedinUseCases = document.getElementById('linkedin-use-cases');
+    const linkedinCaseDisplay = document.getElementById('linkedin-case-display');
+    const notionUseCases = document.getElementById('notion-use-cases');
+    const notionCaseDisplay = document.getElementById('notion-case-display');
+    const accordionButtons = document.querySelectorAll('[data-accordion-target]');
+
+    function showSection(targetId) {
+        tabs.forEach(t => {
+            if (t.dataset.tab === targetId) {
+                t.classList.add('tab-active');
+                t.classList.remove('tab-inactive');
+            } else {
+                t.classList.remove('tab-active');
+                t.classList.add('tab-inactive');
+            }
+        });
+        sections.forEach(section => {
+            if (section.id === targetId) {
+                section.classList.add('active');
+            } else {
+                section.classList.remove('active');
+            }
+        });
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const linkedinData = {
+        'li-text': {
+            title: 'Share Text Post',
+            method: 'POST',
+            url: 'https://api.linkedin.com/v2/ugcPosts',
+            headers: [
+                'Authorization: Bearer {{ YOUR_ACCESS_TOKEN }}',
+                'X-Restli-Protocol-Version: 2.0.0',
+                'Content-Type: application/json',
+            ],
+            body: {
+                author: 'urn:li:person:YOUR_PERSON_URN',
+                lifecycleState: 'PUBLISHED',
+                specificContent: {
+                    'com.linkedin.ugc.ShareContent': {
+                        shareCommentary: {
+                            text: 'Hello, LinkedIn! This post was automatically generated from n8n. #automation'
+                        },
+                        shareMediaCategory: 'NONE'
+                    }
+                },
+                visibility: {
+                    'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+                }
+            }
+        },
+        'li-article': {
+            title: 'Share Article/URL',
+            method: 'POST',
+            url: 'https://api.linkedin.com/v2/ugcPosts',
+            headers: [
+                'Authorization: Bearer {{ YOUR_ACCESS_TOKEN }}',
+                'X-Restli-Protocol-Version: 2.0.0',
+                'Content-Type: application/json',
+            ],
+            body: {
+                author: 'urn:li:person:YOUR_PERSON_URN',
+                lifecycleState: 'PUBLISHED',
+                specificContent: {
+                    'com.linkedin.ugc.ShareContent': {
+                        shareCommentary: {
+                            text: 'An interesting article about n8n!'
+                        },
+                        shareMediaCategory: 'ARTICLE',
+                        media: [{
+                            status: 'READY',
+                            originalUrl: 'https://n8n.io/'
+                        }]
+                    }
+                },
+                visibility: {
+                    'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+                }
+            }
+        },
+        'li-profile': {
+            title: 'Retrieve Profile Data (Third-Party API)',
+            method: 'GET',
+            url: 'https://api.linkedapi.io/data/person/',
+            headers: ['Authorization: Bearer {{ YOUR_LINKEDAPI_TOKEN }}'],
+            body: null,
+            note: 'This example uses a third-party API (Linked API) for easier access, as the official API has complex authentication processes. It serves as an alternative.'
+        }
+    };
+
+    const notionData = {
+        'no-create-page': {
+            title: 'Create Page in Database',
+            method: 'POST',
+            url: 'https://api.notion.com/v1/pages',
+            headers: [
+                'Authorization: Bearer {{ YOUR_NOTION_SECRET }}',
+                'Content-Type: application/json',
+                'Notion-Version: 2022-06-28'
+            ],
+            body: {
+                parent: { database_id: 'YOUR_DATABASE_ID' },
+                properties: {
+                    'Name': {
+                        title: [{
+                            text: { content: 'New idea generated from n8n' }
+                        }]
+                    },
+                    'Status': {
+                        status: { name: 'To do' }
+                    }
+                },
+                children: [{
+                    object: 'block',
+                    type: 'paragraph',
+                    paragraph: {
+                        rich_text: [{
+                            type: 'text',
+                            text: { content: 'This project was automatically added via an n8n workflow.' }
+                        }]
+                    }
+                }]
+            }
+        },
+        'no-append-block': {
+            title: 'Append Content Block to Page',
+            method: 'PATCH',
+            url: 'https://api.notion.com/v1/blocks/YOUR_PAGE_ID/children',
+            headers: [
+                'Authorization: Bearer {{ YOUR_NOTION_SECRET }}',
+                'Content-Type: application/json',
+                'Notion-Version: 2022-06-28'
+            ],
+            body: {
+                children: [{
+                    object: 'block',
+                    type: 'heading_2',
+                    heading_2: {
+                        rich_text: [{
+                            type: 'text',
+                            text: { content: 'New Subtitle' }
+                        }]
+                    }
+                }]
+            }
+        },
+        'no-query-db': {
+            title: 'Query and Filter Database',
+            method: 'POST',
+            url: 'https://api.notion.com/v1/databases/YOUR_DATABASE_ID/query',
+            headers: [
+                'Authorization: Bearer {{ YOUR_NOTION_SECRET }}',
+                'Content-Type: application/json',
+                'Notion-Version: 2022-06-28'
+            ],
+            body: {
+                filter: {
+                    property: 'Status',
+                    status: {
+                        equals: 'Done'
+                    }
+                },
+                sorts: [{
+                    property: 'Created time',
+                    direction: 'descending'
+                }]
+            }
+        }
+    };
+    
+    function updateRequestPreview() {
+        let previewText = `Method: ${httpMethodSelect.value}\n`;
+        previewText += `URL: https://api.example.com/data\n\n`;
+        previewText += `Headers:\n`;
+        previewText += `  Content-Type: application/json\n`;
+        if (hasAuthHeader) {
+            previewText += `  Authorization: Bearer YOUR_TOKEN\n`;
+        }
+        if (httpMethodSelect.value !== 'GET' && httpMethodSelect.value !== 'DELETE') {
+             previewText += `\nBody (JSON):\n`;
+             previewText += JSON.stringify({ key: "value", "anotherKey": 123 }, null, 2);
+        }
+        requestPreview.textContent = previewText;
+    }
+
+    function displayCase(data, container) {
+        let headersHtml = data.headers.map(h => `<li>${h}</li>`).join('');
+        let bodyHtml = data.body ? `<div class="code-block">${JSON.stringify(data.body, null, 2)}</div>` : '<p>No body</p>';
+        let noteHtml = data.note ? `<p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-3 rounded-md">${data.note}</p>` : '';
+
+        container.innerHTML = `
+            <h4 class="text-lg font-bold mb-2">${data.title}</h4>
+            <div class="space-y-3 text-sm">
+                <p><strong>Method:</strong> <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">${data.method}</span></p>
+                <p><strong>URL:</strong> <span class="font-mono text-xs">${data.url}</span></p>
+                <div>
+                    <p class="font-bold">Headers:</p>
+                    <ul class="list-disc list-inside pl-2 font-mono text-xs">${headersHtml}</ul>
+                </div>
+                <div>
+                    <p class="font-bold">Body (JSON):</p>
+                    ${bodyHtml}
+                </div>
+                ${noteHtml}
+            </div>
+        `;
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', e => {
+            e.preventDefault();
+            showSection(tab.dataset.tab);
+        });
+    });
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            showSection(targetId);
+        });
+    });
+
+    httpMethodSelect.addEventListener('change', updateRequestPreview);
+    addHeaderBtn.addEventListener('click', () => {
+        hasAuthHeader = !hasAuthHeader;
+        updateRequestPreview();
+    });
+
+    if(linkedinUseCases) {
+        linkedinUseCases.addEventListener('click', e => {
+            if (e.target.tagName === 'BUTTON') {
+                const caseKey = e.target.dataset.case;
+                displayCase(linkedinData[caseKey], linkedinCaseDisplay);
+            }
+        });
+        displayCase(linkedinData['li-text'], linkedinCaseDisplay);
+    }
+    
+    if(notionUseCases) {
+        notionUseCases.addEventListener('click', e => {
+            if (e.target.tagName === 'BUTTON') {
+                const caseKey = e.target.dataset.case;
+                displayCase(notionData[caseKey], notionCaseDisplay);
+            }
+        });
+        displayCase(notionData['no-create-page'], notionCaseDisplay);
+    }
+
+    accordionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.dataset.accordionTarget;
+            const targetPanel = document.getElementById(targetId);
+            const icon = button.querySelector('span:last-child');
+            
+            if (targetPanel.classList.contains('hidden')) {
+                targetPanel.classList.remove('hidden');
+                icon.textContent = '-';
+                icon.classList.add('rotate-180');
+            } else {
+                targetPanel.classList.add('hidden');
+                icon.textContent = '+';
+                icon.classList.remove('rotate-180');
+            }
+        });
+    });
+    
+    const linkedinCtx = document.getElementById('linkedinAuthChart')?.getContext('2d');
+    if (linkedinCtx) {
+        new Chart(linkedinCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Official API (Direct Integration)', 'Third-Party API (e.g., LinkedAPI)'],
+                datasets: [{
+                    label: 'Relative Complexity & Barrier to Entry',
+                    data: [90, 30],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.6)',
+                        'rgba(59, 130, 246, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(59, 130, 246, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                           callback: function(value) {
+                               if (value === 30) return 'Low';
+                               if (value === 90) return 'High';
+                               return '';
+                           }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.label === 'Official API (Direct Integration)') {
+                                    label += 'High (Partner approval, OAuth 2.0 setup required)';
+                                } else {
+                                    label += 'Low (API key based, ready to use)';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    updateRequestPreview();
+});
+</script>
+</body>
+</html>
