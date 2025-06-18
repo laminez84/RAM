@@ -25,6 +25,8 @@
 
 <div class="flex">
     <aside class="hidden md:block w-48 p-4 sticky top-20 self-start">
+        <h1 class="text-lg font-bold mb-2">n8n 맞춤형 API 연동 가이드</h1>
+        <p class="text-sm text-slate-600 mb-4">LinkedIn과 Notion API를 마스터하여 자동화의 한계를 넘어서세요.</p>
         <ul class="space-y-2 text-sm font-semibold">
             <li><a href="#home" class="nav-link">개요</a></li>
             <li><a href="#http-basics" class="nav-link">HTTP Request 기초</a></li>
@@ -33,17 +35,9 @@
             <li><a href="#advanced" class="nav-link">고급 워크플로우</a></li>
         </ul>
     </aside>
-
     <main class="flex-1">
         <section id="home" class="container mx-auto p-4 md:p-8">
-            <header class="mb-10 text-left">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">n8n 맞춤형 API 연동 가이드</h1>
-                <p class="text-lg text-slate-600">LinkedIn과 Notion API를 마스터하여 자동화의 한계를 넘어서세요.</p>
-            </header>
-
-
             <nav id="tab-nav" class="mb-8 border-b border-slate-200">
-
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">개요</a></li>
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request 기초</a></li>
@@ -53,7 +47,6 @@
                 </ul>
             </nav>
         </section>
-
         <section id="http-basics" class="content-section container mx-auto p-4 md:p-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h2 class="text-2xl font-bold mb-4">HTTP Request 노드 마스터하기</h2>
@@ -86,12 +79,10 @@
                 </div>
             </div>
         </section>
-
         <section id="linkedin" class="content-section container mx-auto p-4 md:p-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h2 class="text-2xl font-bold mb-4">LinkedIn API 연동 심층 분석</h2>
                 <p class="mb-6 text-slate-600">LinkedIn API는 전문 네트워킹 자동화를 위한 강력한 도구이지만, 접근 방식과 인증 과정이 복잡할 수 있습니다. 공식 API의 제약과 대안, 그리고 n8n을 활용한 구체적인 자동화 사례를 살펴봅니다.</p>
-
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold mb-4">인증 방식 비교</h3>
                     <p class="mb-4 text-slate-600">공식 LinkedIn API 접근은 '파트너 프로그램' 승인이 필요하여 진입 장벽이 높습니다. 이 때문에 많은 사용자들이 더 간편한 타사 API를 대안으로 고려합니다. 아래 차트는 각 방식의 상대적인 복잡도를 보여줍니다.</p>
@@ -99,7 +90,6 @@
                         <canvas id="linkedinAuthChart"></canvas>
                     </div>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-semibold mb-4">API 사용 사례 탐색기</h3>
                     <p class="mb-4 text-slate-600">왼쪽 메뉴에서 자동화하려는 작업을 선택하면, 오른쪽에 해당 작업을 위한 n8n HTTP Request 노드 설정 예시가 나타납니다.</p>
@@ -116,17 +106,14 @@
                 </div>
             </div>
         </section>
-
         <section id="notion" class="content-section container mx-auto p-4 md:p-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h2 class="text-2xl font-bold mb-4">Notion API 연동 심층 분석</h2>
                 <p class="mb-6 text-slate-600">Notion API를 활용하면 문서 및 데이터베이스 관리를 자동화할 수 있습니다. Notion의 고유한 인증 방식과 권한 모델을 이해하고, n8n으로 강력한 생산성 워크플로우를 구축하는 방법을 알아봅니다.</p>
-
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold mb-4">핵심 원칙: 세분화된 보안</h3>
                     <p class="mb-4 text-slate-600">Notion은 API 통합 토큰을 생성한 후에도, 자동화하려는 특정 페이지나 데이터베이스에 해당 통합을 '공유'해야 합니다. 이는 토큰이 유출되더라도 피해를 최소화하는 강력한 보안 장치입니다. API 호출 전, <span class="font-bold text-red-600">반드시 페이지 공유 설정을 확인하세요.</span></p>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-semibold mb-4">API 사용 사례 탐색기</h3>
                     <p class="mb-4 text-slate-600">왼쪽 메뉴에서 자동화하려는 작업을 선택하면, 오른쪽에 해당 작업을 위한 n8n HTTP Request 노드 설정 예시가 나타납니다.</p>
@@ -143,12 +130,10 @@
                 </div>
             </div>
         </section>
-
         <section id="advanced" class="content-section container mx-auto p-4 md:p-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h2 class="text-2xl font-bold mb-4">안정적인 워크플로우를 위한 모범 사례</h2>
                 <p class="mb-6 text-slate-600">강력하고 유지보수 가능한 자동화 워크플로우를 구축하려면 몇 가지 핵심 원칙을 따라야 합니다. 오류 처리, API 속도 제한 준수, 안전한 자격 증명 관리는 필수입니다.</p>
-
                 <div class="space-y-4" id="accordion-best-practices">
                     <div class="border border-slate-200 rounded-lg">
                         <button class="w-full flex justify-between items-center p-4 text-left font-semibold" data-accordion-target="bp-1">
@@ -182,28 +167,21 @@
         </section>
     </main>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-
     const tabs = document.querySelectorAll('#tab-nav a');
     const sidebarLinks = document.querySelectorAll('aside .nav-link');
-
     const sections = document.querySelectorAll('.content-section');
-
     const httpMethodSelect = document.getElementById('http-method');
     const addHeaderBtn = document.getElementById('add-header');
     const requestPreview = document.getElementById('request-preview');
     let hasAuthHeader = false;
-
     const linkedinUseCases = document.getElementById('linkedin-use-cases');
     const linkedinCaseDisplay = document.getElementById('linkedin-case-display');
     const notionUseCases = document.getElementById('notion-use-cases');
     const notionCaseDisplay = document.getElementById('notion-case-display');
     const accordionButtons = document.querySelectorAll('[data-accordion-target]');
-
-
     function showSection(targetId) {
         tabs.forEach(t => {
             if (t.dataset.tab === targetId) {
@@ -223,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     }
-
     const linkedinData = {
         'li-text': {
             title: '텍스트 게시물 공유',
@@ -288,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function () {
             note: '이 예시는 공식 API가 아닌, 접근이 용이한 타사 API (Linked API)를 사용합니다. 공식 API의 복잡한 인증 절차를 우회할 수 있는 대안입니다.'
         }
     };
-
     const notionData = {
         'no-create-page': {
             title: '데이터베이스에 페이지 생성',
@@ -366,7 +342,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     };
-
     function updateRequestPreview() {
         let previewText = `Method: ${httpMethodSelect.value}\n`;
         previewText += `URL: https://api.example.com/data\n\n`;
@@ -381,12 +356,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         requestPreview.textContent = previewText;
     }
-
     function displayCase(data, container) {
         let headersHtml = data.headers.map(h => `<li>${h}</li>`).join('');
         let bodyHtml = data.body ? `<div class="code-block">${JSON.stringify(data.body, null, 2)}</div>` : '<p>본문 없음</p>';
         let noteHtml = data.note ? `<p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-3 rounded-md">${data.note}</p>` : '';
-
         container.innerHTML = `
             <h4 class="text-lg font-bold mb-2">${data.title}</h4>
             <div class="space-y-3 text-sm">
@@ -404,30 +377,24 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `;
     }
-
     tabs.forEach(tab => {
         tab.addEventListener('click', e => {
             e.preventDefault();
-
             showSection(tab.dataset.tab);
         });
     });
-
     sidebarLinks.forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
             const targetId = link.getAttribute('href').substring(1);
             showSection(targetId);
-
         });
     });
-
     httpMethodSelect.addEventListener('change', updateRequestPreview);
     addHeaderBtn.addEventListener('click', () => {
         hasAuthHeader = !hasAuthHeader;
         updateRequestPreview();
     });
-
     if (linkedinUseCases) {
         linkedinUseCases.addEventListener('click', e => {
             if (e.target.tagName === 'BUTTON') {
@@ -437,7 +404,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         displayCase(linkedinData['li-text'], linkedinCaseDisplay);
     }
-
     if (notionUseCases) {
         notionUseCases.addEventListener('click', e => {
             if (e.target.tagName === 'BUTTON') {
@@ -447,13 +413,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         displayCase(notionData['no-create-page'], notionCaseDisplay);
     }
-
     accordionButtons.forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.dataset.accordionTarget;
             const targetPanel = document.getElementById(targetId);
             const icon = button.querySelector('span:last-child');
-
             if (targetPanel.classList.contains('hidden')) {
                 targetPanel.classList.remove('hidden');
                 icon.textContent = '-';
@@ -463,7 +427,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
     const linkedinCtx = document.getElementById('linkedinAuthChart')?.getContext('2d');
     if (linkedinCtx) {
         new Chart(linkedinCtx, {
@@ -523,7 +486,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
     updateRequestPreview();
 });
 </script>
