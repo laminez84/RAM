@@ -19,33 +19,12 @@
         .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
     </style>
 </head>
-<body class="antialiased">
-
-<header class="bg-blue-800 text-white sticky top-0 z-50 shadow-md">
-    <nav class="max-w-4xl mx-auto flex items-center justify-between p-4">
-        <a href="../../index.html#home" class="text-2xl font-bold">Ram Woo</a>
-        <button id="nav-toggle" class="md:hidden focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-        </button>
-        <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold">
-            <li><a href="../../index.html#home" class="hover:text-blue-200">Home</a></li>
-            <li><a href="../../about.html" class="hover:text-blue-200">About</a></li>
-            <li><a href="../../experience.html" class="hover:text-blue-200">Experience</a></li>
-            <li><a href="../../learn/" class="hover:text-blue-200">Learn</a></li>
-            <li><a href="../../index.html#contact" class="hover:text-blue-200">Contact</a></li>
-        </ul>
-    </nav>
-    <ul id="nav-menu-mobile" class="md:hidden hidden flex-col space-y-2 px-4 pb-4 text-sm font-semibold bg-blue-800">
-        <li><a href="../../index.html#home" class="block py-1 hover:text-blue-200">Home</a></li>
-        <li><a href="../../about.html" class="block py-1 hover:text-blue-200">About</a></li>
-        <li><a href="../../experience.html" class="block py-1 hover:text-blue-200">Experience</a></li>
-        <li><a href="../../learn/" class="block py-1 hover:text-blue-200">Learn</a></li>
-        <li><a href="../../index.html#contact" class="block py-1 hover:text-blue-200">Contact</a></li>
-    </ul>
-</header>
-
+<body class="antialiased bg-teal-50">
+<div id="site-header"></div>
 <div class="flex">
     <aside class="hidden md:block w-48 p-4 sticky top-20 self-start">
+        <h1 class="text-lg font-bold mb-2">n8n Custom API Integration Guide</h1>
+        <p class="text-sm text-slate-600 mb-4">Master LinkedIn and Notion APIs to push the boundaries of automation.</p>
         <ul class="space-y-2 text-sm font-semibold">
             <li><a href="#home" class="nav-link">Overview</a></li>
             <li><a href="#http-basics" class="nav-link">HTTP Request Basics</a></li>
@@ -54,16 +33,9 @@
             <li><a href="#advanced" class="nav-link">Advanced Workflows</a></li>
         </ul>
     </aside>
-
     <main class="flex-1">
         <section id="home" class="container mx-auto p-4 md:p-8">
-            <header class="mb-10 text-left">
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">n8n Custom API Integration Guide</h1>
-                <p class="text-lg text-slate-600">Master LinkedIn and Notion APIs to push the boundaries of automation.</p>
-            </header>
-
             <nav id="tab-nav" class="mb-8 border-b border-slate-200">
-
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-active" data-tab="home">Overview</a></li>
                     <li class="mr-2"><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="http-basics">HTTP Request Basics</a></li>
@@ -72,8 +44,26 @@
                     <li><a href="#" class="inline-block p-4 border-b-2 rounded-t-lg tab-inactive" data-tab="advanced">Advanced Workflows</a></li>
                 </ul>
             </nav>
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4">Unlock the Full Potential of n8n</h2>
+                <p class="mb-4 text-slate-600">This guide demonstrates how to directly call APIs of services like LinkedIn and Notion using n8n's powerful <code>HTTP Request</code> node. Learn to implement functionalities not available through built-in nodes and build sophisticated custom automation workflows tailored to your business needs. Each section combines theoretical knowledge with practical examples, helping you become an API integration expert.</p>
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-slate-100 p-6 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">What You Will Learn:</h3>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li>Mastering the core components of the HTTP Request node</li>
+                            <li>Complex authentication and usage of the LinkedIn API</li>
+                            <li>Automating databases and content via the Notion API</li>
+                            <li>Error handling and best practices for robust workflows</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-100 p-6 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">How to Use This Guide:</h3>
+                        <p class="text-slate-700">Click on the tabs above to navigate directly to your desired topic. Each section includes conceptual explanations, interactive examples, and code snippets required for actual API calls. Interact directly to grasp the principles of API integration.</p>
+                    </div>
+                </div>
+            </div>
         </section>
-
         <section id="http-basics" class="content-section container mx-auto p-4 md:p-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h2 class="text-2xl font-bold mb-4">Mastering the HTTP Request Node</h2>
@@ -106,12 +96,10 @@
                 </div>
             </div>
         </section>
-
         <section id="linkedin" class="content-section container mx-auto p-4 md:p-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h2 class="text-2xl font-bold mb-4">In-depth Analysis: LinkedIn API Integration</h2>
                 <p class="mb-6 text-slate-600">The LinkedIn API is a powerful tool for professional networking automation, but its access methods and authentication processes can be complex. We'll explore the limitations of the official API, alternatives, and specific automation examples using n8n.</p>
-
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold mb-4">Authentication Method Comparison</h3>
                     <p class="mb-4 text-slate-600">Accessing the official LinkedIn API often requires 'Partner Program' approval, which presents a high barrier to entry. This leads many users to consider simpler third-party APIs as alternatives. The chart below illustrates the relative complexity of each method.</p>
@@ -148,7 +136,6 @@
                     <h3 class="text-xl font-semibold mb-4">Core Principle: Granular Security</h3>
                     <p class="mb-4 text-slate-600">Even after creating an API integration token, Notion requires you to 'share' that integration with the specific pages or databases you want to automate. This is a strong security measure to minimize damage if a token is compromised. Before making API calls, <span class="font-bold text-red-600">always check your page sharing settings.</span></p>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-semibold mb-4">API Use Case Explorer</h3>
                     <p class="mb-4 text-slate-600">Select an automation task from the left menu to view an example n8n HTTP Request node configuration on the right.</p>
@@ -206,31 +193,20 @@
         </section>
     </main>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const toggle = document.getElementById('nav-toggle');
-    const mobileMenu = document.getElementById('nav-menu-mobile');
-    toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-
-
     const tabs = document.querySelectorAll('#tab-nav a');
     const sidebarLinks = document.querySelectorAll('aside .nav-link');
-
     const sections = document.querySelectorAll('.content-section');
-
     const httpMethodSelect = document.getElementById('http-method');
     const addHeaderBtn = document.getElementById('add-header');
     const requestPreview = document.getElementById('request-preview');
     let hasAuthHeader = false;
-
     const linkedinUseCases = document.getElementById('linkedin-use-cases');
     const linkedinCaseDisplay = document.getElementById('linkedin-case-display');
     const notionUseCases = document.getElementById('notion-use-cases');
     const notionCaseDisplay = document.getElementById('notion-case-display');
     const accordionButtons = document.querySelectorAll('[data-accordion-target]');
-
-
     function showSection(targetId) {
         tabs.forEach(t => {
             if (t.dataset.tab === targetId) {
@@ -250,8 +226,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     }
-
-
     const linkedinData = {
         'li-text': {
             title: 'Share Text Post',
@@ -316,7 +290,6 @@ document.addEventListener('DOMContentLoaded', function () {
             note: 'This example uses a third-party API (Linked API) for easier access, as the official API has complex authentication processes. It serves as an alternative.'
         }
     };
-
     const notionData = {
         'no-create-page': {
             title: 'Create Page in Database',
@@ -411,12 +384,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         requestPreview.textContent = previewText;
     }
-
     function displayCase(data, container) {
         let headersHtml = data.headers.map(h => `<li>${h}</li>`).join('');
         let bodyHtml = data.body ? `<div class="code-block">${JSON.stringify(data.body, null, 2)}</div>` : '<p>No body</p>';
         let noteHtml = data.note ? `<p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-3 rounded-md">${data.note}</p>` : '';
-
         container.innerHTML = `
             <h4 class="text-lg font-bold mb-2">${data.title}</h4>
             <div class="space-y-3 text-sm">
@@ -434,30 +405,24 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `;
     }
-
     tabs.forEach(tab => {
         tab.addEventListener('click', e => {
             e.preventDefault();
-
             showSection(tab.dataset.tab);
         });
     });
-
     sidebarLinks.forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
             const targetId = link.getAttribute('href').substring(1);
             showSection(targetId);
-
         });
     });
-
     httpMethodSelect.addEventListener('change', updateRequestPreview);
     addHeaderBtn.addEventListener('click', () => {
         hasAuthHeader = !hasAuthHeader;
         updateRequestPreview();
     });
-
     if(linkedinUseCases) {
         linkedinUseCases.addEventListener('click', e => {
             if (e.target.tagName === 'BUTTON') {
@@ -477,7 +442,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         displayCase(notionData['no-create-page'], notionCaseDisplay);
     }
-
     accordionButtons.forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.dataset.accordionTarget;
@@ -555,9 +519,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
     updateRequestPreview();
 });
 </script>
+    <script src="/load-header.js"></script>
 </body>
 </html>
