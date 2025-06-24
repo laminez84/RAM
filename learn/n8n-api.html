@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive guides on vibe coding and other topics">
-    <title>Learn</title>
+    <meta name="description" content="n8n API quick reference">
+    <title>n8n API</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
 <body class="bg-gray-50 text-gray-800">
     <header class="bg-blue-800 text-white sticky top-0 z-50 shadow-md">
         <nav class="max-w-4xl mx-auto flex items-center justify-between p-4">
-            <a href="../index.html" class="text-2xl font-bold">Ram Woo</a>
+            <a href="../index.html#home" class="text-2xl font-bold">Ram Woo</a>
             <button id="nav-toggle" class="md:hidden focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
             </button>
@@ -56,33 +56,30 @@
             <li><a href="../index.html#contact" class="block py-1 hover:text-blue-200">Contact</a></li>
         </ul>
     </header>
-    <main class="max-w-4xl mx-auto px-4">
-        <section class="py-20 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Learn</h1>
-            <p class="text-gray-600 max-w-2xl mx-auto">Explore interactive guides and resources. Choose a category to begin.</p>
-        </section>
-        <section class="pb-20 grid md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between hover:shadow-lg transition">
-                <div>
-                    <h2 class="text-2xl font-semibold mb-2">Vibe Coding</h2>
-                    <p class="text-gray-600 text-sm mb-4">Interactive guide to vibe coding principles and workflow.</p>
-                </div>
-                <div class="flex justify-center space-x-4">
-                    <a href="vibe-coding/ko.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">한국어</a>
-                    <a href="vibe-coding/en.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">English</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between hover:shadow-lg transition">
-                <div>
-                    <h2 class="text-2xl font-semibold mb-2">n8n API</h2>
-                    <p class="text-gray-600 text-sm mb-4">Reference guide for interacting with n8n programmatically.</p>
-                </div>
-                <div class="flex justify-center">
-                    <a href="n8n-api.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Open</a>
-                </div>
-            </div>
-        </section>
-    </main>
+    <div class="max-w-4xl mx-auto px-4 py-6 flex">
+        <aside class="w-48 mr-6">
+            <h1 class="text-xl font-bold mb-4">n8n API</h1>
+            <h2 class="font-semibold mb-2">Endpoints</h2>
+            <ul class="space-y-1 text-sm" id="api-menu">
+                <li><a href="#intro" class="block py-1 hover:text-blue-600">Introduction</a></li>
+                <li><a href="#auth" class="block py-1 hover:text-blue-600">Authentication</a></li>
+                <li><a href="#workflows" class="block py-1 hover:text-blue-600">Workflows</a></li>
+            </ul>
+        </aside>
+        <main class="flex-1 space-y-8">
+            <section id="intro">
+                <p class="text-gray-700">Basic information about n8n API usage.</p>
+            </section>
+            <section id="auth">
+                <h2 class="text-2xl font-bold mb-2">Authentication</h2>
+                <p class="text-gray-700">How to authenticate with the API.</p>
+            </section>
+            <section id="workflows">
+                <h2 class="text-2xl font-bold mb-2">Workflows</h2>
+                <p class="text-gray-700">Managing workflows via API.</p>
+            </section>
+        </main>
+    </div>
     <footer class="bg-blue-800 text-white text-center py-4">
         &copy; 2025 Ram Woo
     </footer>
@@ -102,5 +99,4 @@
         }
     </script>
 </body>
-
 </html>
