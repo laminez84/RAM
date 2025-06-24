@@ -22,11 +22,11 @@
             <button id="nav-toggle" class="md:hidden focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
             </button>
-            <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold items-center">
+          <ul id="nav-menu" class="hidden md:flex space-x-6 text-sm font-semibold items-center">
                 <li><a href="index.html#home" class="hover:text-blue-200">Home</a></li>
                 <li><a href="about.html" class="hover:text-blue-200">About</a></li>
                 <li><a href="experience.html" class="hover:text-blue-200">Experience</a></li>
-                <li class="relative group">
+            <li class="relative group">
                     <span class="hover:text-blue-200 cursor-pointer">Learn</span>
                     <ul class="absolute left-0 top-full bg-blue-800 text-white rounded shadow-md space-y-1 hidden group-hover:block hover:block">
                         <li><a href="learn/" class="block px-4 py-2 hover:bg-blue-700 whitespace-nowrap">Overview</a></li>
@@ -42,7 +42,7 @@
             <li><a href="index.html#home" class="block py-1 hover:text-blue-200">Home</a></li>
             <li><a href="about.html" class="block py-1 hover:text-blue-200">About</a></li>
             <li><a href="experience.html" class="block py-1 hover:text-blue-200">Experience</a></li>
-            <li>
+          <li>
                 <button id="learn-mobile-toggle" class="w-full text-left flex justify-between items-center py-1 hover:text-blue-200">Learn
                     <svg id="learn-mobile-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -80,7 +80,7 @@
     <script>
         const toggle = document.getElementById('nav-toggle');
         const mobileMenu = document.getElementById('nav-menu-mobile');
-        if (toggle) toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+      if (toggle) toggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
         const learnToggle = document.getElementById('learn-mobile-toggle');
         const learnMenu = document.getElementById('learn-mobile-menu');
