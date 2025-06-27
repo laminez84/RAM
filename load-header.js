@@ -12,9 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const learnItem = document.getElementById('learn-item');
       const learnDropdown = document.getElementById('learn-dropdown');
-      if (learnItem && learnDropdown) {
-        learnItem.addEventListener('mouseenter', () => learnDropdown.classList.remove('hidden'));
-        learnItem.addEventListener('mouseleave', () => learnDropdown.classList.add('hidden'));
+      const navMenu = document.getElementById('nav-menu');
+      if (learnItem && learnDropdown && navMenu) {
+        const show = () => learnDropdown.classList.remove('hidden');
+        const hide = () => learnDropdown.classList.add('hidden');
+        [learnItem, learnDropdown].forEach(el => {
+          el.addEventListener('mouseenter', show);
+          el.addEventListener('mouseleave', hide);
+        });
+        navMenu.querySelectorAll('> li').forEach(li => {
+          if (li !== learnItem) {
+            li.addEventListener('mouseenter', show);
+          }
+        });
+        navMenu.addEventListener('mouseleave', hide);
       }
     })
     .catch(err => console.error('Failed to load header:', err));
